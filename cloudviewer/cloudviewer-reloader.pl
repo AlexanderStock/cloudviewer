@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 
 use strict;
-use lib "/usr/lib/cloudviewer/lib";
+use lib "/var/lib/cloudviewer/lib";
 use Data::Dumper;
 use Getopt::Long;
 use cloudviewer::connector;

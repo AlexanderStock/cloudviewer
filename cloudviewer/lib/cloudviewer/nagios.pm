@@ -2,9 +2,7 @@ package cloudviewer::nagios;
 
 use strict;
 use warnings;
-
 use Data::Dumper;
-use Nagios::Plugin;
 use File::Path 'rmtree';
 use Switch;
 

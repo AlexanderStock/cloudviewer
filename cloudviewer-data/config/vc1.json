@@ -22,9 +22,7 @@
 			"whitelist":[],
 			"blacklist":[],
 			"warn":"",
-			"critical":"",
-			"conversionfunction":"",
-			"unit":""
+			"critical":""
 			},
                         {
 			"name":"Memory-usage",
@@ -34,9 +32,7 @@
 			"whitelist":[],
 			"blacklist":[],
 			"warn":"",
-			"critical":"",
-                        "conversionfunction":"",
-                        "unit":""
+			"critical":""
 			},
 			{
 			"name":"Memory-vmmemctl",
@@ -46,9 +42,7 @@
 			"whitelist":[],
 			"blacklist":[],
 			"warn":"",
-			"critical":"",
-                        "conversionfunction":"",
-                        "unit":""
+			"critical":""
 			},
 			{
 			"name":"Memory-consumed",
@@ -58,9 +52,7 @@
 			"whitelist":[],
 			"blacklist":[],
 			"warn":"",
-			"critical":"",
-                        "conversionfunction":"",
-                        "unit":""
+			"critical":""
 			}
                         ],
 		"checks":[
@@ -125,10 +117,7 @@
 			"whitelist":[],
 			"blacklist":[],
 			"warn":"",
-			"critical":"",
-                        "critical":"",
-                        "conversionfunction":"",
-                        "unit":""
+			"critical":""
 			},
                         {
 			"name":"CPU-wait",
@@ -138,10 +127,7 @@
 			"whitelist":[],
 			"blacklist":[],
 			"warn":"",
-			"critical":"",
-                        "critical":"",
-                        "conversionfunction":"",
-                        "unit":""
+			"critical":""
 			},
 			{
 			"name":"Memory-shared",
@@ -151,10 +137,7 @@
 			"whitelist":[],
 			"blacklist":[],
 			"warn":"",
-			"critical":"",
-                        "critical":"",
-                        "conversionfunction":"",
-                        "unit":""
+                        "critical":""
 			},
                         {
 			"name":"CPU-ready",
@@ -164,10 +147,7 @@
 			"whitelist":[],
 			"blacklist":[],
 			"warn":"",
-			"critical":"",
-                        "critical":"",
-                        "conversionfunction":"cpuready",
-                        "unit":"%"
+			"critical":""
 			}
 			],	
 		"checks":[
@@ -263,10 +243,7 @@
 			"whitelist":[],
 			"blacklist":[],
 			"warn":"",
-			"critical":"",
-                        "critical":"",
-                        "conversionfunction":"",
-                        "unit":""
+			"critical":""
 			}
                         ],
 		"checks":[
@@ -323,10 +300,7 @@
 			"warn":"",
 			"whitelist":[],
 			"blacklist":[],
-			"critical":"",
-                        "critical":"",
-                        "conversionfunction":"",
-                        "unit":""
+			"critical":""
 			},
        	        	{
 			"name":"CPU-wait",
@@ -336,10 +310,7 @@
 			"warn":"",
 			"whitelist":[],
 			"blacklist":[],
-			"critical":"",
-                        "critical":"",
-                        "conversionfunction":"",
-                        "unit":""
+                        "critical":""
 			},
                 	{
 			"name":"CPU-ready",
@@ -349,10 +320,7 @@
 			"warn":"",
 			"whitelist":[],
 			"blacklist":[],
-			"critical":"",
-                        "critical":"",
-                        "conversionfunction":"",
-                        "unit":""
+                        "critical":""
 			},
                 	{
 			"name":"Memory-active",
@@ -362,10 +330,7 @@
 			"warn":"",
 			"whitelist":[],
 			"blacklist":[],
-			"critical":"",
-                        "critical":"",
-                        "conversionfunction":"",
-                        "unit":""
+                        "critical":""
 			},
 			{
 			"name":"Memory-vmmemctl",
@@ -375,10 +340,7 @@
 			"warn":"",
 			"whitelist":[],
 			"blacklist":[],
-			"critical":"",
-                        "critical":"",
-                        "conversionfunction":"",
-                        "unit":""
+                        "critical":""
 			},
 			{
 			"name":"Disk-write",
@@ -388,10 +350,7 @@
 			"warn":"",
 			"whitelist":[],
 			"blacklist":[],
-			"critical":"",
-                        "critical":"",
-                        "conversionfunction":"",
-                        "unit":""
+			"critical":""
 			},
 			{
 			"name":"Disk-read",
@@ -401,10 +360,7 @@
 			"warn":"",
 			"whitelist":[],
 			"blacklist":[],
-			"critical":"",
-                        "critical":"",
-                        "conversionfunction":"",
-                        "unit":""
+			"critical":""
 			}
                         ],
 		"checks":[

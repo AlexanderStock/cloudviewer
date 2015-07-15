@@ -4,7 +4,6 @@ use strict;
 use warnings;
 use JSON;
 use Data::Dumper;
-use Nagios::Plugin;
 use Switch;
 
 sub new
@@ -344,7 +343,7 @@ foreach my $i (@$filterlist)
 			$idobj=PerfMetricId->new(counterId => $y->key,instance => '' ); 
 			push(@newarray,$idobj);
 			##Creating an extra Hashref because PerfMetricId does not support a Label attribute
-			$newhash->{$i->{type}}->{$i->{nameinfo}}={key => $y->key};
+			$newhash->{$i->{type}}->{$i->{nameinfo}}={key => $y->key,unit=>$y->unitInfo->label};
 		}
 	}
 }

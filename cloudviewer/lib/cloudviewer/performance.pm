@@ -3,9 +3,6 @@ package cloudviewer::performance;
 use strict;
 use warnings;
 use Data::Dumper;
-use strict;
-no strict 'subs';
-no strict 'refs';
 
 sub check_perf
 {
@@ -22,7 +19,7 @@ my $key=$table->{$check->{type}}->{$check->{nameinfo}}->{key};
 my $checkdata=$check->{type}."-".$check->{nameinfo};
 my $performance=0;
 my $value;
-my $unit=$check->{unit};
+my $unit=$table->{$check->{type}}->{$check->{nameinfo}}->{unit};
 my $func;
 
 if((scalar @{$object->{performance}}) gt 0)
@@ -35,19 +32,15 @@ if((scalar @{$object->{performance}}) gt 0)
 			$checker=1;
 			$performance=$metric->value;
 			$value=$metric->value;
+
 			## Converting value with wanted function
-			if($check->{conversionfunction})
+			if($unit eq "Millisecond")
 			{
-				$func="cloudviewer::math::$check->{conversionfunction}";
-		 		if(defined(&{$func}))
-				{
-					$value=&$func($value);
-				}
-				else
-				{
-					push(@message,"Info: Conversion function not found");
-				}	
+				$value=($value / (20  * 1000)) * 100;
+				$unit="%";
 			}
+
+			
 			if(!$check->{'critical'} and !$check->{'warn'})
 			{
 				push(@message,"OK:      Performancecounter:$check->{type}:$check->{nameinfo} is green but no values defined. Value: ".$value.$unit);
@@ -57,17 +50,17 @@ if((scalar @{$object->{performance}}) gt 0)
 
 				if($value lt $check->{'warn'})
 				{
-					push(@message,"OK:      Performancecounter:$check->{type}:$check->{nameinfo} is green. Value: ".$value.$unit);	
+					push(@message,"OK:      Performancecounter:$check->{type}:$check->{nameinfo} is green. Value: $value $unit");	
 				}
 				elsif($value gt $check->{'warn'} and $metric->value lt $check->{'critical'})
 				{
 					$status=1;
-			 		push(@message,"Warn:      Performancecounter:$check->{type}:$check->{nameinfo} is yellow. Value: ".$value.$unit);
+			 		push(@message,"Warn:      Performancecounter:$check->{type}:$check->{nameinfo} is yellow. Value: $value $unit");
 				}
 				else
 				{
 					$status=2;
-					push(@message,"Critical:      Performancecounter:$check->{type}:$check->{nameinfo} is Red. Value: ".$value.$unit);
+					push(@message,"Critical:      Performancecounter:$check->{type}:$check->{nameinfo} is Red. Value: $value $unit");
 				}
 			}
 		}		
