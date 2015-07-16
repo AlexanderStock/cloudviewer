@@ -253,7 +253,6 @@ else
 {
         push(@message,"OK:      Host is in Maintenance. Not checking.");
 }
-#print Dumper(@message);
 return {'name' => $object->{name},'message' => \@message, 'status' => $status, 'service' => $$prefix.$checkdata->{name}, performance => $status};
 }
 
@@ -266,21 +265,25 @@ my $header=shift;
 my @message=@{$header};
 my $status=0;
 my $ostatus=$object->{configuration}->{$checkdata->{properties}[0]};
+my $Maintenance=$object->{configuration}->get_property('runtime.inMaintenanceMode');
 
-if($ostatus->val eq "red")
+if($Maintenance eq "false")
 {
-	$status=2;
-	push(@message,"Critical:      Overall Status is Red!");
-}
-if($ostatus->val eq "yellow")
-{
-	$status=1;
-	push(@message,"Warn:      Overall Status is Yellow!");
-}
-if($ostatus->val eq "green")
-{
-	$status=0;
-	push(@message,"OK:      Overall Status is green!");
+	if($ostatus->val eq "red")
+	{
+		$status=2;
+		push(@message,"Critical:      Overall Status is Red!");
+	}
+	if($ostatus->val eq "yellow")
+	{
+		$status=1;
+		push(@message,"Warn:      Overall Status is Yellow!");
+	}
+	if($ostatus->val eq "green")
+	{
+		$status=0;
+		push(@message,"OK:      Overall Status is green!");
+	}
 }
 
 return {'name' => $object->{name},'message' => \@message, 'status' => $status, 'service' => $$prefix.$checkdata->{name}, performance => $status};

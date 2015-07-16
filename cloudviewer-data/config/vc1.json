@@ -70,7 +70,8 @@
 			"stdvalues":{},
 			"whitelist":[],
 			"blacklist":[],
-			"stdvalues":{},"properties":["configIssue"]
+			"stdvalues":{},
+			"properties":["configIssue"]
 			},
 			{
 			"name":"Alarmstate",
