@@ -2,7 +2,6 @@ package cloudviewer::performance;
 
 use strict;
 use warnings;
-use Data::Dumper;
 
 sub check_perf
 {

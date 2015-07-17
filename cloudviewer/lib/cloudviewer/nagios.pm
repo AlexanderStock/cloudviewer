@@ -2,9 +2,7 @@ package cloudviewer::nagios;
 
 use strict;
 use warnings;
-use Data::Dumper;
 use File::Path 'rmtree';
-use Switch;
 
 ###################################################################
 ## Get already configured objects from TXT File			 ##

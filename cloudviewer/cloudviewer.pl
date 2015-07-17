@@ -3,7 +3,7 @@
 use strict;
 no strict 'subs';
 no strict 'refs';
-use lib "/var/lib/cloudviewer/lib";
+use lib "/usr/lib/cloudviewer/lib";
 use diagnostics;
 use cloudviewer::connector;
 use cloudviewer::nagios;
@@ -12,6 +12,7 @@ use cloudviewer::clusterchecks;
 use cloudviewer::hostchecks;
 use cloudviewer::datastorechecks;
 use cloudviewer::vmchecks;
+use cloudviewer::helper;
 use VMware::VIRuntime;
 use Data::Dumper;
 use Getopt::Long;
