@@ -62,12 +62,14 @@ for my $file (@conffilelist)
 		}
 
 		##Get new Objects and create the Nagios Config for them
-		cloudviewer::nagios::set_newobjects($tempobject->get_new,$hostgroups,$dir);
 		cloudviewer::nagios::set_oldobjects($tempobject->get_old,$hostgroups,$dir);
+		cloudviewer::nagios::set_newobjects($tempobject->get_new,$hostgroups,$dir);		
+
 
 		##Get new services and create the Nagios Config for them
-		cloudviewer::nagios::set_newservices($tempobject->get_newservices,$hostgroups,$dir);
 		cloudviewer::nagios::set_oldservices($tempobject->get_oldservices,$hostgroups,$dir);
+		cloudviewer::nagios::set_newservices($tempobject->get_newservices,$hostgroups,$dir);
+
 
 	}
 }

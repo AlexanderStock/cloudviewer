@@ -1,7 +1,7 @@
 {
 "Monitoring":{
 	"vcenterdata":{
-		"vcenterurl":"https://192.168.1.140:443/sdk/webService",
+		"vcenterurl":"https://192.168.178.37:443/sdk/webService",
 		"vcenteruser":"root",
 		"vcenterpasswd":"vmware",
 		"sessiondir":"/var/lib/cloudviewer-data/sessions",
@@ -211,22 +211,25 @@
 			],
                 "externalchecks":[
 			{
-			"name":"Fake-SSH",
+			"name":"Check-SSH",
 			"whitelist":[],
 			"blacklist":[],
-			"cmd":"fakessh"
+			"cmd":"check_ssh!$HOSTADDRESS$",
+			"period":"5"
 			},
                         {
-			"name":"Fake-MGMT",
+			"name":"Check-MGMT",
 			"whitelist":[],
 			"blacklist":[],
-			"cmd":"fakemgmt"
+			"cmd":"check_tcp!448!$HOSTADDRESS$",
+			"period":"10"
 			},
 			{
-			"name":"Fake-SSL",
+			"name":"Check-SSL",
 			"whitelist":[],
 			"blacklist":[],
-			"cmd":"fakessl"
+			"cmd":"fakessl",
+			"period":"5"
 			}	
 			]
 		},
@@ -427,19 +430,22 @@
 			"name":"Fake-SSH",
 			"whitelist":[],
 			"blacklist":[],
-			"cmd":"fakessh"
+			"cmd":"fakessh",
+			"period":"5"
 			},
                         {
 			"name":"Fake-MGMT",
 			"whitelist":[],
 			"blacklist":[],
-			"cmd":"fakemgmt"
+			"cmd":"fakemgmt",
+			"period":"5"
 			},
 			{
 			"name":"Fake-SSL",
 			"whitelist":[],
 			"blacklist":[],
-			"cmd":"fakessl"
+			"cmd":"fakessl",
+			"period":"5"
 			}
 		]
 		}

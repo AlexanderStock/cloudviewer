@@ -417,15 +417,15 @@ foreach my $mode (@modes)
 
 	foreach my $y (@$checks)
 	{
-        	push(@{$arrays->{$mode}},{name => $id."-".$mode."-".$y->{name},cmd => ""});
+        	push(@{$arrays->{$mode}},{name => $id."-".$mode."-".$y->{name},cmd => "",period => ""});
 	}
 	foreach my $x (@$metrics)
 	{
-        	push(@{$arrays->{$mode}},{name => $id."-".$mode."-".$x->{'name'},cmd => ""});
+        	push(@{$arrays->{$mode}},{name => $id."-".$mode."-".$x->{'name'},cmd => "",period => ""});
 	}
         foreach my $z (@$external)
         {
-                push(@{$arrays->{$mode}},{name => $id."-".$mode."-".$z->{name},cmd => $z->{cmd}} );
+                push(@{$arrays->{$mode}},{name => $id."-".$mode."-".$z->{name},cmd => $z->{cmd},period => $z->{period}} );
         }
 
 }
@@ -612,7 +612,7 @@ foreach my $mode (@modes)
                 foreach my $i (@{$jsonchecks->{$mode}})
                 {
 			 $checker=1;
-			 if($self->{nagios}->{services}->{$mode}->{$i->{name}}  and $self->{nagios}->{services}->{$mode}->{$i->{name}}->{cmd} eq $i->{cmd})
+			 if($self->{nagios}->{services}->{$mode}->{$i->{name}}  and $self->{nagios}->{services}->{$mode}->{$i->{name}}->{cmd} eq $i->{cmd} and $self->{nagios}->{services}->{$mode}->{$i->{name}}->{period} eq $i->{period})
                          {
                                  $checker=0;
                          }
@@ -653,8 +653,7 @@ foreach my $mode (@modes)
                         $checker=1;
                         foreach my $x (@{$jsonchecks->{$mode}})
                         {
-				#print "$x->{name} eq $i  and ".$x->{cmd}." eq".$self->{nagios}->{services}->{$mode}->{$i}->{cmd}."\n";
-                                if($x->{name} eq $i  and $x->{cmd} eq $self->{nagios}->{services}->{$mode}->{$i}->{cmd})
+                                if($x->{name} eq $i  and $x->{cmd} eq $self->{nagios}->{services}->{$mode}->{$i}->{cmd} and  $x->{period} eq $self->{nagios}->{services}->{$mode}->{$i}->{period})
                                 {
                                         $checker=0;
                                         last;

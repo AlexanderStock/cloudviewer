@@ -79,7 +79,7 @@ else
 for my $line (@mainlines)
 {
         chomp(@temparray=split(/,/,$line));
-        $maingiveback{$temparray[0]}={cmd => $temparray[1]};
+        $maingiveback{$temparray[0]}={cmd => $temparray[1],period => $temparray[2]};
 }
 
 return {main => \%maingiveback};
@@ -204,7 +204,7 @@ for my $mode (keys %$objects)
 		$name=$i->{name};
 		$file=$nagiosdir.$hostgroups{$mode}."/".$name.".cfg";
 		unlink $file;
-		$text=~s/^$name,[a-zA-Z0-9]*\n//gm if $text;
+		$text=~s/^$name,((.*?)*\/?)*\n//gm if $text;
 	}
 	##Write changes to main file
 	if($text)
@@ -251,7 +251,7 @@ for my $mode (keys %$objects)
                 $name=$i;
                 $file=$nagiosdir.$hostgroups{$mode}."/services/service-".$name.".cfg";
                 unlink $file;
-                $text=~s/^$name,[a-zA-Z0-9]*\n//gm if $text;
+                $text=~s/^$name,((.*?)*\/?)*\n//gm if $text;
         }
         ##Write changes to main file
         if($text)
@@ -306,8 +306,8 @@ check_period            24x7
 notification_interval   30
 notification_period     24x7
 max_check_attempts      4
-check_interval          5
-retry_interval          5
+check_interval         <period>
+retry_interval          <period>
 contact_groups          admins
 }";
 
@@ -328,17 +328,18 @@ for my $mode (keys %$objects)
 		if($i->{cmd})
 		{
 			$temp=$templateactive;
-                        $config=$config.$i->{name}.",".$i->{cmd}."\n";
+                        $config=$config.$i->{name}.",".$i->{cmd}.",".$i->{period}."\n";
                         $temp=~s/<hostgroup>/$hostgroups{$mode}/g;
                         $temp=~s/<desc>/$i->{name}/g;
 			$temp=~s/<command>/$i->{cmd}/g;
+			$temp=~s/<period>/$i->{period}/g;
                         $path=$nagiosdir.$hostgroups{$mode}."/services/service-".$i->{name}.".cfg";
 
 		}
 		else
 		{
                 	$temp=$templatepassiv;
-			$config=$config.$i->{name}.",\n";
+			$config=$config.$i->{name}.",,".$i->{period}."\n";
                 	$temp=~s/<hostgroup>/$hostgroups{$mode}/g;
                		$temp=~s/<desc>/$i->{name}/g;
 			$path=$nagiosdir.$hostgroups{$mode}."/services/service-".$i->{name}.".cfg";
