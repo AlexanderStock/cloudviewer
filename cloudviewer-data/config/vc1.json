@@ -212,22 +212,16 @@
                 "externalchecks":[
 			{
 			"name":"Check-SSH",
-			"whitelist":[],
-			"blacklist":[],
 			"cmd":"check_ssh!$HOSTADDRESS$",
 			"period":"5"
 			},
                         {
 			"name":"Check-MGMT",
-			"whitelist":[],
-			"blacklist":[],
 			"cmd":"check_tcp!448!$HOSTADDRESS$",
 			"period":"10"
 			},
 			{
 			"name":"Check-SSL",
-			"whitelist":[],
-			"blacklist":[],
 			"cmd":"fakessl",
 			"period":"5"
 			}	
@@ -428,22 +422,16 @@
                 "externalchecks":[
 			{
 			"name":"Fake-SSH",
-			"whitelist":[],
-			"blacklist":[],
 			"cmd":"fakessh",
 			"period":"5"
 			},
                         {
 			"name":"Fake-MGMT",
-			"whitelist":[],
-			"blacklist":[],
 			"cmd":"fakemgmt",
 			"period":"5"
 			},
 			{
 			"name":"Fake-SSL",
-			"whitelist":[],
-			"blacklist":[],
 			"cmd":"fakessl",
 			"period":"5"
 			}
