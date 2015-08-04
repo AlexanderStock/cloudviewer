@@ -8,6 +8,8 @@ Possible checks you can use for your objects are: You can also build dynamic che
 The Nagiosinventory is created automatically by the second cloudviewer script which runs as a cronjob and queries all vCenter Objects periodically and configures the nagios objects for it.
 Installation (a dependencie here is a working nagios installation)
 
+# Installation
+
 ## The VMware SDK:
 
 [Official Howto for Linux](https://developercenter.vmware.com/doc/preview?id=157#https%3A%2F%2Fvdc-repo.vmware.com%2Fvmwb-repository%2Fdcr-public%2F55a8bd37-3cb5-47bf-b523-cdc55a9d29c6%2F0a25a243-2c31-4093-b351-ae2065dc490f%2Fdoc%2Fcli_install.3.5.html%231106926)
