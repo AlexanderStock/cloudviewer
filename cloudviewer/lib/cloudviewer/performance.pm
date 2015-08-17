@@ -15,7 +15,7 @@ my $perfarray;
 my $checker=0;
 my $table=${$object->{performance_table}};
 my $key=$table->{$check->{type}}->{$check->{nameinfo}}->{key};
-my $checkdata=$check->{type}."-".$check->{nameinfo};
+my $checkdata=$check->{name};
 my $performance=0;
 my $value;
 my $unit=$table->{$check->{type}}->{$check->{nameinfo}}->{unit};
@@ -33,7 +33,7 @@ if((scalar @{$object->{performance}}) gt 0)
 			$value=$metric->value;
 
 			## Converting value with wanted function
-			if($unit eq "Millisecond")
+			if($check->{nameinfo} eq "ready")
 			{
 				$value=($value / (20  * 1000)) * 100;
 				$unit="%";

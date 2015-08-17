@@ -2,6 +2,7 @@ package cloudviewer::hostchecks;
 
 use strict;
 use warnings;
+use Data::Dumper;
 
 sub Issues
 {
@@ -24,7 +25,7 @@ if(cloudviewer::helper::checkdependency(\@dependencies,$checkdata->{properties})
         		$status=2;
         		for my $issue (@{$Issues})
         		{
-                		push(@message,"ERROR:   ".$issue);
+                		push(@message,"ERROR:   ".$issue->fullFormattedMessage."  Date: ".$issue->createdTime);
         		}
 		}
 		else
@@ -68,7 +69,7 @@ if(cloudviewer::helper::checkdependency(\@dependencies,$checkdata->{properties})
 
         		for my $alarm (@{$Alarms})
         		{
-                		push(@message,"ERROR:       ".$alarm);
+                		push(@message,"ERROR:       ".$object->{alerts}->{$alarm->alarm->value}->{desc});
         		}
 		}
 		else
@@ -190,7 +191,9 @@ my $checkdata=shift;
 my $prefix=shift;
 my $header=shift;
 my @message=@{$header};
+my $servicename;
 my $status=0;
+my $overallstatus=0;
 my @dependencies=("config.service.service");
 
 if(cloudviewer::helper::checkdependency(\@dependencies,$checkdata->{properties}) eq 0)
@@ -203,16 +206,17 @@ if(cloudviewer::helper::checkdependency(\@dependencies,$checkdata->{properties})
 	{
         	foreach my $service (@$services)
         	{
-			if($stdvalues->{$service})
+			$servicename=$service->key;
+			if(defined($stdvalues->{$servicename}))
 			{
-                		if($service->running eq $stdvalues->{$service} )
+                		if($service->running eq $stdvalues->{$servicename} )
                 		{
-                       		 	push(@message,"OK:  Service ".$service->label." is in wanted state.");
+                       		 	push(@message,"--> Configured Service OK:  Service ".$service->label." is in wanted state.");
                        		 	$status=0;
              		 	 }
                			else
                 		{
-                         		push(@message,"ERROR:  Service ".$service->label." is not in wanted state.");
+                         		push(@message,"--> Configured Service ERROR:  Service ".$service->label." is not in wanted state.");
                        			$status=2;
                			 }
 			}
@@ -229,6 +233,10 @@ if(cloudviewer::helper::checkdependency(\@dependencies,$checkdata->{properties})
                        			$status=1;
                		 	}
       		  	}
+      		  if($status gt $overallstatus)
+		  {
+		      $overallstatus=$status;
+		  }
 		}
 	}
 	else
@@ -242,7 +250,7 @@ else
 	push(@message,"Error:	Configuration Item  not defined.");
 }
 
-return {'name' => $object->{name},'message' => \@message, 'status' => $status, 'service' => $$prefix.$checkdata->{name}, performance => $status};
+return {'name' => $object->{name},'message' => \@message, 'status' => $overallstatus, 'service' => $$prefix.$checkdata->{name}, performance => $status};
 }
 
 sub NetworkState

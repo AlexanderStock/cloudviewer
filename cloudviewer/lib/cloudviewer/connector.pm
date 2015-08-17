@@ -3,7 +3,6 @@ package cloudviewer::connector;
 use strict;
 use warnings;
 use JSON;
-use Data::Dumper;
 use Switch;
 
 sub new
@@ -129,6 +128,10 @@ my %dependenciehash;
 my $parent;
 my $item;
 my $tempname;
+my $alarmMgr;
+my $alarmList;
+my %alarmdesc;
+my $tempalert;
 
 if($sessiondir !~ /^\/([a-z0-9]*\/?)*\/$/)
 {
@@ -168,6 +171,9 @@ $content = Vim::get_service_content();
 $perfmgr_view = Vim::get_view(mo_ref => Vim::get_service_content()->perfManager);
 ##Get all available metrics
 $perf_metrics_all=$perfmgr_view->perfCounter;
+##Get all Alertdefinitions
+$alarmMgr  = Vim::get_view(mo_ref => Vim::get_service_content()->alarmManager);
+
 
 foreach my $mode (@modes)
 {
@@ -197,6 +203,13 @@ foreach my $mode (@modes)
                 $config=$$self{config}{Monitoring}{$mode}{configurationitems};
                 $properties=$self->get_propertielist($checks,$config);
                 $metrics=$$self{config}{Monitoring}{$mode}{performancemetrics};
+                $alarmList = $alarmMgr->GetAlarm();
+
+		for my $alert (@$alarmList)
+		{
+		  $tempalert=Vim::get_view(mo_ref => $alert);
+		  $alarmdesc{$alert->value}={desc => $tempalert->info->description};
+		}
 
 		## Getting data from vcenter
 		eval{
@@ -240,7 +253,7 @@ foreach my $mode (@modes)
                         }
 
 
-			push(@{$self->{$mode}},{performance_table=>$perf_metric_table,performance=>$perf_data,name=>$tempname." in ".$vcid,configuration=>$i,parent => $parent});
+			push(@{$self->{$mode}},{performance_table=>$perf_metric_table,performance=>$perf_data,name=>$tempname." in ".$vcid,configuration=>$i,parent => $parent,alerts => \%alarmdesc});
 		}
 	}
 	else

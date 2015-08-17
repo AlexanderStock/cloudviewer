@@ -231,7 +231,7 @@ if(cloudviewer::helper::checkdependency(\@dependencies,$checkdata->{properties})
 
 		for my $issue (@{$Issues})
 		{
-			push(@message,"ERROR:	".$issue);
+			push(@message,"ERROR:	".$issue->fullFormattedMessage."  Date: ".$issue->createdTime);
 		}
 	}
 	else
@@ -267,7 +267,7 @@ if(cloudviewer::helper::checkdependency(\@dependencies,$checkdata->{properties})
 
         	for my $alarm (@{$Alarms})
         	{
-                	push(@message,"ERROR:       ".$alarm);
+                	push(@message,"ERROR:       ".$object->{alerts}->{$alarm->alarm->value}->{desc});
         	}
 	}
 	else
