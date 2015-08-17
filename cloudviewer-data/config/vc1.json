@@ -1,7 +1,7 @@
 {
 "Monitoring":{
 	"vcenterdata":{
-		"vcenterurl":"https://192.168.178.37:443/sdk/webService",
+		"vcenterurl":"https://192.168.2.10:443/sdk/webService",
 		"vcenteruser":"root",
 		"vcenterpasswd":"vmware",
 		"sessiondir":"/var/lib/cloudviewer-data/sessions",
@@ -149,6 +149,56 @@
 			"blacklist":[],
 			"warn":"",
 			"critical":""
+			},
+			{
+			"name":"Memory-usage",
+			"type":"Memory",
+			"rolluptype":"average",
+			"nameinfo":"usage",
+			"whitelist":[],
+			"blacklist":[],
+			"warn":"",
+			"critical":""
+			},
+			{
+			"name":"Memory-vmmemctl",
+			"type":"Memory",
+			"rolluptype":"average",
+			"nameinfo":"vmmemctl",
+			"whitelist":[],
+			"blacklist":[],
+			"warn":"",
+			"critical":""
+			},
+			{
+			"name":"Memory-Activewrite",
+			"type":"Memory",
+			"rolluptype":"average",
+			"nameinfo":"activewrite",
+			"whitelist":[],
+			"blacklist":[],
+			"warn":"",
+			"critical":""
+			},
+			{
+			"name":"Memory-Swapoutrate",
+			"type":"Memory",
+			"rolluptype":"average",
+			"nameinfo":"swapoutRate",
+			"whitelist":[],
+			"blacklist":[],
+			"warn":"",
+			"critical":""
+			},
+			{
+			"name":"Memory-consumed",
+			"type":"Memory",
+			"rolluptype":"average",
+			"nameinfo":"consumed",
+			"whitelist":[],
+			"blacklist":[],
+			"warn":"",
+			"critical":""
 			}
 			],	
 		"checks":[
@@ -203,7 +253,7 @@
 			{
 			"name":"ServiceState",
 			"function":"ServiceState",
-			"stdvalues":{},
+			"stdvalues":{"TSM":0,"TSM-SSH":0,"snmpd":0},
 			"whitelist":[],
 			"blacklist":[],
 			"properties":["config.service.service"]
@@ -212,16 +262,22 @@
                 "externalchecks":[
 			{
 			"name":"Check-SSH",
+			"whitelist":[],
+			"blacklist":[],
 			"cmd":"check_ssh!$HOSTADDRESS$",
 			"period":"5"
 			},
                         {
 			"name":"Check-MGMT",
+			"whitelist":[],
+			"blacklist":[],
 			"cmd":"check_tcp!448!$HOSTADDRESS$",
 			"period":"10"
 			},
 			{
 			"name":"Check-SSL",
+			"whitelist":[],
+			"blacklist":[],
 			"cmd":"fakessl",
 			"period":"5"
 			}	
@@ -422,16 +478,22 @@
                 "externalchecks":[
 			{
 			"name":"Fake-SSH",
+			"whitelist":[],
+			"blacklist":[],
 			"cmd":"fakessh",
 			"period":"5"
 			},
                         {
 			"name":"Fake-MGMT",
+			"whitelist":[],
+			"blacklist":[],
 			"cmd":"fakemgmt",
 			"period":"5"
 			},
 			{
 			"name":"Fake-SSL",
+			"whitelist":[],
+			"blacklist":[],
 			"cmd":"fakessl",
 			"period":"5"
 			}
