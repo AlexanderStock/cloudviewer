@@ -102,21 +102,21 @@ my $config="";
 my $temp;
 my $parent;
 
-my $template = "
-define host{                                            \
-host_name                       <name>                  \
-address                         <address>               \
-hostgroups                      <hostgroup>	        \
-check_command                   <command>               \
-parents				<parent>		\
-check_interval                  5                       \
-retry_interval                  1                       \
-max_check_attempts              5                       \
-check_period                    24x7                    \
-contact_groups                  admins           \
-notification_interval           30                      \
-notification_period             24x7                    \
-notification_options            d,u,r                   \
+my $template = 
+"define host{                                           
+host_name                       <name>
+address                         <address>               
+hostgroups                      <hostgroup>	        
+check_command                   <command>               
+parents				<parent>		
+check_interval                  5
+retry_interval                  1
+max_check_attempts              5
+check_period                    24x7
+contact_groups                  admins
+notification_interval           30
+notification_period             24x7
+notification_options            d,u,r
 }";
 
 
@@ -141,8 +141,8 @@ for my $mode (keys %$objects)
 		$parent=$i->{parent};
 		if($mode eq 'vm' or $mode eq 'host')
 		{
-			$command="check-host-alive";
-			#$command="check_ok";
+			#$command="check-host-alive";
+			$command="check_ok";
 		}
 		else
 		{
@@ -276,8 +276,8 @@ my $temp;
 my $config="";
 my $servicefile;
 
-my $templatepassiv =  "
-define service{
+my $templatepassiv =  
+"define service{
 hostgroups          <hostgroup>
 service_description     <desc>
 check_command		check_passiv
@@ -294,8 +294,8 @@ contact_groups          admins
 }";
 
 
-my $templateactive =  "
-define service{
+my $templateactive =  
+"define service{
 hostgroups          <hostgroup>
 service_description     <desc>
 check_command		<command>

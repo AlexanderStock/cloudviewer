@@ -1,4 +1,7 @@
 #!/usr/bin/perl -w
+#Version: 0.1.8
+#Author: Alexander Stock
+#Contact: alexander@stock-alexander.de
 
 use strict;
 no strict 'subs';
@@ -14,7 +17,6 @@ use cloudviewer::datastorechecks;
 use cloudviewer::vmchecks;
 use cloudviewer::helper;
 use VMware::VIRuntime;
-use Data::Dumper;
 use Getopt::Long;
 
 my $file;
@@ -42,8 +44,13 @@ my @modes;
 my @header;
 my $domainsocket;
 my $whitecheck;
-my 	$blackcheck;
+my $blackcheck;
+my $powercheck;
+my $power;
 my @message;
+my $service;
+my %bigmessage;
+my $identifier;
 
 GetOptions (
 "file=s" => \$file,
@@ -110,12 +117,13 @@ for my $mode (@modes)
 		        {
 				$whitecheck=0;
 				$blackcheck=0;
+				$service=$prefix.$check->{name};
 				if(@{$check->{whitelist}})
 				{
 					$whitecheck=1;
 					foreach my $whiteobject (@{$check->{whitelist}})
 					{
-						if($whiteobject eq $object->{configuration}->name)
+						if($object->{configuration}->name =~ /$whiteobject/)
 						{
 							$whitecheck=0;
 							last;
@@ -126,13 +134,13 @@ for my $mode (@modes)
 				{
 					foreach my $blackobject (@{$check->{blacklist}})
 					{
-						if($blackobject eq $object->{configuration}->name)
+						if($object->{configuration}->name =~ /$blackobject/)
 						{
 							$blackcheck=1;
 							last;
 						}
 					}
-				}
+				}	
 				if($whitecheck eq 0 and $blackcheck eq 0)
 				{
 			        	$func="cloudviewer::".$mode."checks::$check->{function}";
@@ -148,10 +156,12 @@ for my $mode (@modes)
 				}
 				else
 				{
-					@message=@header;
-					push(@message,"OK: Host is not on Whitelist or is on Blacklist.");
-					push(@result_checks, {'name' => $object->{name},'message' => \@message, 'status' => 0, 'service' => $prefix.$check->{name}, performance => 0 });
-				}					
+					$identifier=$object->{name}."-".$service;
+					push(@{$bigmessage{$identifier}},@header);
+					push(@{$bigmessage{$identifier}},"OK: Host is not on Whitelist or is on Blacklist.");
+					push(@result_checks, {'name' => $object->{name},'message' => \@{$bigmessage{$identifier}}, 'status' => 0, 'service' => $service, performance => 0 });
+				}
+				undef(@message);					
 			}
 
 			##Working on the Performance Checks
@@ -159,12 +169,14 @@ for my $mode (@modes)
 			{
 				$whitecheck=0;
 				$blackcheck=0;
+				$powercheck=0;
+				$service=$prefix.$perfcheck->{name};
 				if(@{$perfcheck->{whitelist}})
 				{
 					$whitecheck=1;
 					foreach my $whiteobject (@{$perfcheck->{whitelist}})
 					{
-						if($whiteobject eq $object->{configuration}->name)
+						if($object->{configuration}->name =~ /$whiteobject/)
 						{
 							$whitecheck=0;
 							last;
@@ -175,22 +187,39 @@ for my $mode (@modes)
 				{
 					foreach my $blackobject (@{$perfcheck->{blacklist}})
 					{
-						if($blackobject eq $object->{configuration}->name)
+						if($object->{configuration}->name =~ /$blackobject/)
 						{
 							$blackcheck=1;
 							last;
 						}
 					}
 				}
-				if($whitecheck eq 0 and $blackcheck eq 0)
+				if($mode eq "vm" or $mode eq "host")
+				{
+					$power=$object->{configuration}->get_property("runtime.powerState");
+					if($power->val eq "poweredOff")
+					{
+						$powercheck=1;
+					}
+				}
+
+				if($powercheck eq 1)
+				{
+					$identifier=$object->{name}."-".$service;
+					push(@{$bigmessage{$identifier}},@header);
+					push(@{$bigmessage{$identifier}},"OK: Host is Powered off. No Performance Data available.");
+					push(@result_checks, {'name' => $object->{name},'message' => \@{$bigmessage{$identifier}}, 'status' => 0, 'service' => $service, performance => 0 });
+				}
+				elsif($whitecheck eq 0 and $blackcheck eq 0)
 				{
 					push(@result_checks_perf,cloudviewer::performance::check_perf($object,\$prefix,$perfcheck,\@header));
 				}
 				else
 				{
-					@message=@header;
-					push(@message,"OK: Host is not on Whitelist or is on Blacklist.");
-					push(@result_checks, {'name' => $object->{name},'message' => \@message, 'status' => 0, 'service' => $prefix.$check->{name}, performance => 0 });
+					$identifier=$object->{name}."-".$service;
+					push(@{$bigmessage{$identifier}},@header);
+					push(@{$bigmessage{$identifier}},"OK: Host is not on Whitelist or is on Blacklist.");
+					push(@result_checks, {'name' => $object->{name},'message' => \@{$bigmessage{$identifier}}, 'status' => 0, 'service' => $service, performance => 0 });
 				}	
 			}
 		}

@@ -2,6 +2,7 @@ package cloudviewer::clusterchecks;
 
 use strict;
 use warnings;
+use Data::Dumper;
 
 sub Issues
 {
@@ -84,29 +85,21 @@ my $header=shift;
 my @message=@{$header};
 my $status=0;
 my @dependencies=("configuration.drsConfig");
-my @dependencies_std=("vmotionRate","enableVmBehaviorOverrides","enabled");
+my @dependencies_std=("defaultVmBehavior","enabled");
 
 if(cloudviewer::helper::checkdependency(\@dependencies,$checkdata->{properties}) eq 0 and cloudviewer::helper::checkdependencystd(\@dependencies_std,$checkdata->{stdvalues}) eq 0)
 {
 	my $drsobj=$object->{configuration}->{$checkdata->{properties}[0]};
 	my $stdvalues=$checkdata->{stdvalues};
-	if($drsobj->vmotionRate eq $stdvalues->{vmotionRate})
+	my $automationlevel=$drsobj->defaultVmBehavior->val;
+	if($automationlevel eq $stdvalues->{defaultVmBehavior})
 	{
-		push(@message,"OK:	vMotionRate set like expected");
+		push(@message,"OK:	Automation Level set like expected");
 	}
 	else
 	{
-        	push(@message,"Error:	vMotionRate not set like expected");
+        	push(@message,"Error:	Automation Level not set like expected");
 		$status=1;
-	}
-	if($drsobj->enableVmBehaviorOverrides eq $stdvalues->{enableVmBehaviorOverrides})
-	{
-        	push(@message,"OK:	enableVmBehaviorOverrides set like expected");
-	}
-	else
-	{
-        	push(@message,"Error:	enableVmBehaviorOverrides not set like expected");
-        	$status=1;
 	}
 	if($drsobj->enabled eq $stdvalues->{enabled})
 	{
@@ -127,7 +120,7 @@ else
 return {'name' => $object->{name},'message' => \@message, 'status' => $status, 'service' => $$prefix.$checkdata->{name}, performance => $status};
 }
 
-sub DASstate
+sub HAstate
 {
 my $object=shift;
 my $checkdata=shift;

@@ -1,4 +1,7 @@
 #!/usr/bin/perl
+#Version: 0.1.8
+#Author: Alexander Stock
+#Contact: alexander@stock-alexander.de
 
 use strict;
 use lib "/usr/lib/cloudviewer/lib";

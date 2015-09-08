@@ -2,7 +2,6 @@ package cloudviewer::hostchecks;
 
 use strict;
 use warnings;
-use Data::Dumper;
 
 sub Issues
 {
@@ -314,7 +313,6 @@ if(cloudviewer::helper::checkdependency(\@dependencies,$checkdata->{properties})
 					}
 			          	foreach $nic_key (@{$switch->pnic})
                                   	{
-						#print Dumper($nic_key);
 						if(!$NIC{$nic_key}->linkSpeed)
 						{
 							push(@message,"ERROR:  Network-Card ".$NIC{$nic_key}->device." is down.");
@@ -390,6 +388,63 @@ else
 return {'name' => $object->{name},'message' => \@message, 'status' => $status, 'service' => $$prefix.$checkdata->{name}, performance => $status};
 }						
 	
+sub ComponentCheck
+{
+my $object=shift;
+my $checkdata=shift;
+my $prefix=shift;
+my $header=shift;
+my $status=0;
+my @message= @{$header};
+my @dependencies=("summary.runtime.healthSystemRuntime.systemHealthInfo.numericSensorInfo");
+
+if(cloudviewer::helper::checkdependency(\@dependencies,$checkdata->{properties}) eq 0)
+{
+	my $components=$object->{configuration}->{$checkdata->{properties}[0]};
+	my $Maintenance=$object->{configuration}->get_property('runtime.inMaintenanceMode');
+	my $errorcounter=0;
+	my %errorlist;
+	my $stdcomponents=$checkdata->{stdvalues};
+	if($Maintenance eq "false")
+	{
+		foreach my $stdcomponent (keys %$stdcomponents)
+		{
+			foreach my $component (@$components)
+			{
+				if(($component->name) eq $stdcomponents->{$stdcomponent})
+				{
+					push(@message,"OK:  Component: ".$component->name."was found");
+					$errorlist{$stdcomponents->{$stdcomponent}}=0;
+					last;
+				}
+				else
+				{
+					$errorlist{$stdcomponents->{$stdcomponent}}=1;
+				}
+			}
+		}
+		foreach my $error (keys %errorlist)
+		{
+			if($errorlist{$error} eq 1)
+			{
+				push(@message,"Error:  Component: ".$error."was not found");
+				$status=1;
+			}
+		}
+	}
+	else
+	{
+        	push(@message,"OK:      Host is in Maintenance. Not checking.");
+	}
+}
+else
+{
+	$status=2;
+	push(@message,"Error:	Configuration Item  not defined.");
+}
+#print Dumper(@message);
+return {'name' => $object->{name},'message' => \@message, 'status' => $status, 'service' => $$prefix.$checkdata->{name}, performance => $status};
+}
 
 
 1

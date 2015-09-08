@@ -3,7 +3,6 @@ package cloudviewer::connector;
 use strict;
 use warnings;
 use JSON;
-use Switch;
 
 sub new
 {
@@ -174,33 +173,35 @@ $perf_metrics_all=$perfmgr_view->perfCounter;
 ##Get all Alertdefinitions
 $alarmMgr  = Vim::get_view(mo_ref => Vim::get_service_content()->alarmManager);
 
-
 foreach my $mode (@modes)
 {
        	if($mode eq "cluster")
         {
                	$view_type="ClusterComputeResource";
                	$interval=300;
+		$config={"name"=>"name"};
         }
         elsif($mode eq "datastore")
         {
                	$view_type="Datastore";
                	$interval=300;
+		$config={"name"=>"name"};
         }
         elsif($mode eq "host")
         {
                	$view_type="HostSystem";
               	$interval=20;
+		$config={"name"=>"name","ip"=>"summary.managementServerIp","maintenance"=>"runtime.inMaintenanceMode","parent"=>"parent","power"=>"runtime.powerState"};
         }	
         elsif($mode eq "vm")
         {
                	$view_type="VirtualMachine";
                	$interval=20;
+		$config={"name"=>"name","ip"=>"guest.ipAddress","parent"=>"runtime.host","storage"=>"datastore","power"=>"runtime.powerState"};
         }
         if($$self{updatemode} eq 0)
       	{
                 $checks=$$self{config}{Monitoring}{$mode}{checks};
-                $config=$$self{config}{Monitoring}{$mode}{configurationitems};
                 $properties=$self->get_propertielist($checks,$config);
                 $metrics=$$self{config}{Monitoring}{$mode}{performancemetrics};
                 $alarmList = $alarmMgr->GetAlarm();
@@ -242,24 +243,25 @@ foreach my $mode (@modes)
 			}
                         if($mode eq "host")
                         {
-				$item=$$self{config}{Monitoring}{$mode}{configurationitems}{parent};
+				$item="parent";
                                 $parent=$dependenciehash{cluster}{$i->get_property($item)->value}{name};
                                 $dependenciehash{host}{$i->{mo_ref}->value}={name => $tempname." in ".$vcid};
                         }
                         if($mode eq "vm")
                         {
-				$item=$$self{config}{Monitoring}{$mode}{configurationitems}{parent};
+				$item="runtime.host";
+				#Set ID of VM in Hostname
+				$tempname=$tempname." ++".$i->{'mo_ref'}->value."++";
                                 $parent=$dependenciehash{host}{$i->get_property($item)->value}{name};
                         }
 
 
-			push(@{$self->{$mode}},{performance_table=>$perf_metric_table,performance=>$perf_data,name=>$tempname." in ".$vcid,configuration=>$i,parent => $parent,alerts => \%alarmdesc});
+			push(@{$self->{$mode}},{performance_table=>$perf_metric_table,performance=>$perf_data,name=>$tempname." in $vcid",configuration=>$i,parent => $parent,alerts => \%alarmdesc});
 		}
 	}
 	else
 	{
                 $checks=[];
-                $config=$$self{config}{Monitoring}{$mode}{configurationitems};
                 $properties=$self->get_propertielist($checks,$config);
                 
 		eval{
@@ -283,17 +285,19 @@ foreach my $mode (@modes)
                         }
                         if($mode eq "host")
                         {
-                                $item=$$self{config}{Monitoring}{$mode}{configurationitems}{parent};
+                                $item="parent";
                                 $parent=$dependenciehash{cluster}{$i->get_property($item)->value}{name};
                                 $dependenciehash{host}{$i->{mo_ref}->value}={name => $tempname." in ".$vcid};
                         }
                         if($mode eq "vm")
                         {
-                                $item=$$self{config}{Monitoring}{$mode}{configurationitems}{parent};
+                                $item="runtime.host";
+				#Set ID of VM in Hostname
+				$tempname=$tempname." ++".$i->{'mo_ref'}->value."++";
                                 $parent=$dependenciehash{host}{$i->get_property($item)->value}{name};
                         }
 
-                        push(@{$self->{$mode}},{performance_table=>"",performance=>"",name=>$tempname." in ".$vcid,configuration=>$i,parent => $parent});
+                        push(@{$self->{$mode}},{performance_table=>"",performance=>"",name=>$tempname." in $vcid",configuration=>$i,parent => $parent});
                 }
 	}
 }
@@ -383,7 +387,6 @@ my $giveback={};
 
 foreach my $mode (@modes)
 {
-#	$giveback->{$mode}=$id."-".$$self{config}{Monitoring}{$mode}{hostgroup};
 	$giveback->{$mode}=$id."-".$mode;
 }
 return \$giveback;
@@ -478,7 +481,7 @@ my $self=shift;
 my $mode=shift;
 my $tester=0;
 my %giveback;
-my @modes=$self->get_modes();;
+my @modes=$self->get_modes();
 my $temp;
 my $item;
 my $ip;
@@ -494,7 +497,14 @@ foreach my $mode (@modes)
 			foreach  my $y (@{$self->{$mode}})
 			{
 	                        $temp=$y->{'configuration'};
-        	                $item=$$self{config}{Monitoring}{$mode}{configurationitems}{ip};
+				if($mode eq 'vm')
+				{
+					$item="guest.ipAddress";
+				}
+				elsif($mode eq 'host')
+				{
+					$item="summary.managementServerIp";
+				}
                 	        ## Check if objects which should have an ip have it and set the value
                         	if($mode eq 'vm' or $mode eq 'host')
                         	{
@@ -550,7 +560,14 @@ foreach my $mode (@modes)
 		{
 			$temp=$i->{'configuration'};
                         $checker=1;
-			$item=$$self{config}{Monitoring}{$mode}{configurationitems}{ip};
+			if($mode eq 'vm')
+			{
+				$item="guest.ipAddress";
+			}
+			elsif($mode eq 'host')
+			{
+				$item="summary.managementServerIp";
+			}
 			## Check if objects which should have an ip have it and set the value
                         if($mode eq 'vm' or $mode eq 'host')
 			{

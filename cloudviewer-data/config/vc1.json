@@ -1,7 +1,7 @@
 {
 "Monitoring":{
 	"vcenterdata":{
-		"vcenterurl":"https://192.168.2.10:443/sdk/webService",
+		"vcenterurl":"https://172.16.105.128:443/sdk/webService",
 		"vcenteruser":"root",
 		"vcenterpasswd":"vmware",
 		"sessiondir":"/var/lib/cloudviewer-data/sessions",
@@ -10,9 +10,6 @@
 		},
 	"cluster":{
 		"enabled":"1",
-		"configurationitems":{
-				"name":"name"
-				},
                 "performancemetrics":[
                         {
 			"name":"CPU-usagemhz",
@@ -82,8 +79,8 @@
 			"properties":["triggeredAlarmState"]
 			},
 			{
-			"name":"DASstate",
-			"function":"DASstate",
+			"name":"HAstate",
+			"function":"HAstate",
 			"stdvalues":{"admissionControlEnabled":"1","hostMonitoring":"enabled","enabled":"1"},
 			"whitelist":[],
 			"blacklist":[],
@@ -92,7 +89,7 @@
 			{
 			"name":"DRSstate",
 			"function":"DRSstate",
-			"stdvalues":{"vmotionRate":"3","enableVmBehaviorOverrides":"1","enabled":"1"},
+			"stdvalues":{"defaultVmBehavior":"fullyAutomated","enabled":"1"},
 			"whitelist":[],
 			"blacklist":[],
 			"properties":["configuration.drsConfig"]
@@ -103,12 +100,6 @@
 		},
 	"host":{
 		"enabled":"1",
-		"configurationitems":{
-				"name":"name",
-				"ip":"summary.managementServerIp",
-				"maintenance":"runtime.inMaintenanceMode",
-				"parent":"parent"
-				},
 		"performancemetrics":[
 			{
 			"name":"CPU-usagemhz",
@@ -126,7 +117,7 @@
 			"rolluptype":"summation",
 			"nameinfo":"wait",
 			"whitelist":[],
-			"blacklist":[],
+			"blacklist":["DC0_C0"],
 			"warn":"",
 			"critical":""
 			},
@@ -257,6 +248,14 @@
 			"whitelist":[],
 			"blacklist":[],
 			"properties":["config.service.service"]
+			},
+			{
+			"name":"ComponentCheck",
+			"function":"ComponentCheck",
+			"stdvalues":{"BNX-Firmware":"bnx2 device firmware 1.9.6 ","BNX-Driver":"bnx2 driver 1.6.10 "},
+			"whitelist":[],
+			"blacklist":[],
+			"properties":["summary.runtime.healthSystemRuntime.systemHealthInfo.numericSensorInfo"]
 			}
 			],
                 "externalchecks":[
@@ -285,9 +284,6 @@
 		},
 	"datastore":{
 		"enabled":"1",
-		"configurationitems":{
-			 	"name":"name"
-				},
                 "performancemetrics":[
                         {
 			"name":"CPU-numberReadAveraged",
@@ -339,12 +335,6 @@
 		},
 	"vm":{
 		"enabled":"1",
-		"configurationitems":{
-				"name":"name",
-				"ip":"guest.ipAddress",
-				"storage":"datastore",
-				"parent":"runtime.host"
-				},
                 "performancemetrics":[
 			{
 			"name":"CPU-usagemhz",
