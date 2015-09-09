@@ -3,7 +3,11 @@
 What is Cloudviewer?
 Cloudviewer is a scriptcollection for monitoring VMWare based Clusters,Hosts,Datastores and VMs with Nagios (OMD). Cloudviewer depends on the 5.5 Version of the VMWare Perl SDK. It is working with one active check per vCenter which pulls the data from the vcenter and putting it into passiv checks after inspecting it.
 
-Possible checks you can use for your objects are: You can also build dynamic checks for performance data and for external checks like check_http.
+Possible checks you can use for your objects are:
+
+[https://github.com/AlexanderStock/cloudviewer/wiki/3.-Configuration-Checks](https://github.com/AlexanderStock/cloudviewer/wiki/3.-Configuration-Checks)
+
+You can also build dynamic checks for performance data and for external checks like check_http.
 
 The Nagiosinventory is created automatically by the second cloudviewer script which runs as a cronjob and queries all vCenter Objects periodically and configures the nagios objects for it.
 Installation (a dependencie here is a working nagios installation)
