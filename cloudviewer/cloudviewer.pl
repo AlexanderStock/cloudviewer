@@ -54,7 +54,6 @@ my $identifier;
 
 GetOptions (
 "file=s" => \$file,
-"dir=s" => \$dir,
 )
 or die("Error in command line arguments\n");
 
@@ -68,6 +67,7 @@ $vcenter->get_vcenterdata;
 $hostgroups=$vcenter->get_hostgroups(1);
 $vcid=$vcenter->get_vcid;
 $domainsocket=$vcenter->get_domainsocket;
+$dir=$vcenter->get_automationdir;
 
 foreach my $mode (@modes)
 {

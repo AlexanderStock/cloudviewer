@@ -6,6 +6,7 @@
 		"vcenterpasswd":"vmware",
 		"sessiondir":"/var/lib/cloudviewer-data/sessions",
 		"domainsocket":"/omd/sites/cloudviewer1/tmp/run/nagios.cmd",
+		"automationdir":"/var/lib/cloudviewer-data/cloudviewer-automated/",
 		"vcenterID":"VC1"
 		},
 	"cluster":{

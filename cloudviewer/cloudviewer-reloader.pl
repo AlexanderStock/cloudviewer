@@ -25,7 +25,6 @@ my $hostgroups;
 
 
 GetOptions (
-"dir=s" => \$dir,
 "confdir=s" => \$confdir,
 )
 or die("Error in command line arguments\n");
@@ -48,6 +47,7 @@ for my $file (@conffilelist)
 		$tempobject->set_updatemode;
 		$tempobject->get_vcenterdata;
 		@modes=$tempobject->get_modes;
+		$dir=$tempobject->get_automationdir;
 		##Get Hostgroups per Objecttype
 		$hostgroups=$tempobject->get_hostgroups(1);
 		$oldhostgroups=$tempobject->get_hostgroups(0);
@@ -76,5 +76,3 @@ for my $file (@conffilelist)
 
 	}
 }
-
-#system("omd reload cloudviewer1 nagios");	

@@ -3,6 +3,7 @@ package cloudviewer::connector;
 use strict;
 use warnings;
 use JSON;
+use Data::Dumper;
 
 sub new
 {
@@ -393,7 +394,7 @@ return \$giveback;
 }
 
 ##############################################################################
-## Get he internal VCenter ID				                    ##
+## Get the internal VCenter ID				                    ##
 ##############################################################################
 sub get_vcid
 {
@@ -402,8 +403,20 @@ my $id=$$self{config}{Monitoring}{vcenterdata}{vcenterID};
 
 return $id;
 }
+
 ##############################################################################
-## Get the path for Nagios Domainsocket				                    ##
+## Get the automationdir				                    ##
+##############################################################################
+sub get_automationdir
+{
+my $self=shift;
+my $dir=$$self{config}{Monitoring}{vcenterdata}{automationdir};
+
+return $dir;
+}
+
+##############################################################################
+## Get the path for Nagios Domainsocket				            ##
 ##############################################################################
 sub get_domainsocket
 {

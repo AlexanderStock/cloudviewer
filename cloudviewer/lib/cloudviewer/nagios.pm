@@ -141,8 +141,8 @@ for my $mode (keys %$objects)
 		$parent=$i->{parent};
 		if($mode eq 'vm' or $mode eq 'host')
 		{
-			#$command="check-host-alive";
-			$command="check_ok";
+			$command="check-host-alive";
+			#$command="check_ok";
 		}
 		else
 		{
