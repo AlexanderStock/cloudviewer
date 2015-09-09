@@ -2,7 +2,6 @@ package cloudviewer::clusterchecks;
 
 use strict;
 use warnings;
-use Data::Dumper;
 
 sub Issues
 {

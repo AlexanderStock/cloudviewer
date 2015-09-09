@@ -1,5 +1,5 @@
 #!/usr/bin/perl -w
-#Version: 0.1.8
+#Version: 0.1.9
 #Author: Alexander Stock
 #Contact: alexander@stock-alexander.de
 
