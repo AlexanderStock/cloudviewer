@@ -7,16 +7,29 @@ sub checkdependency
 {
 my $firsttemp=shift;
 my $secondtemp=shift;
+my $object=shift;
 my @firstarray=sort(@$firsttemp);
 my @secondarray=sort(@$secondtemp);
 my $checker=0;
 
 for(my $item=0;$item<=@firstarray-1;$item++)
 {
-	if($firstarray[$item] ne $secondarray[$item])
+	if(exists $secondarray[$item] )
+	{
+		if($firstarray[$item] ne $secondarray[$item])
+		{
+			$checker=1;
+		}
+	}
+	else
 	{
 		$checker=1;
 	}
+        if(!exists($object->{configuration}->{$firstarray[$item]}))
+        {
+        	$checker=1;
+        }
+
 }
 
 return $checker;

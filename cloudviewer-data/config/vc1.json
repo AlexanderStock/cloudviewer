@@ -1,13 +1,13 @@
 {
 "Monitoring":{
 	"vcenterdata":{
-		"vcenterurl":"https://172.16.105.128:443/sdk/webService",
+		"vcenterurl":"https://vcenter:443/sdk/webService",
 		"vcenteruser":"root",
 		"vcenterpasswd":"vmware",
 		"sessiondir":"/var/lib/cloudviewer-data/sessions",
-		"domainsocket":"/omd/sites/cloudviewer1/tmp/run/nagios.cmd",
+		"domainsocket":"/omd/sites/cloudviewer/tmp/run/nagios.cmd",
 		"automationdir":"/var/lib/cloudviewer-data/cloudviewer-automated/",
-		"vcenterID":"VC1"
+		"vcenterID":"VMVC02"
 		},
 	"cluster":{
 		"enabled":"1",
@@ -17,40 +17,72 @@
 			"type":"CPU",
 			"rolluptype":"average",
 			"nameinfo":"usagemhz",
+			"instance":"",
 			"whitelist":[],
 			"blacklist":[],
 			"warn":"",
-			"critical":""
+			"critical":"",
+			"notificationoptions":"w,c,r",
+			"checkperiod":"24x7",
+			"notificationinterval":"30",
+			"notificationperiod":"24x7",
+			"maxcheckattempts":"4",
+                        "notificationperiod":"24x7",
+			"contactgroups":"admins"
 			},
                         {
 			"name":"Memory-usage",
 			"type":"Memory",
 			"rolluptype":"average",
 			"nameinfo":"usage",
+                        "instance":"",
 			"whitelist":[],
 			"blacklist":[],
 			"warn":"",
-			"critical":""
+			"critical":"",
+                        "notificationoptions":"w,c,r",
+                        "checkperiod":"24x7",
+                        "notificationinterval":"30",
+                        "notificationperiod":"24x7",
+                        "maxcheckattempts":"4",
+                        "notificationperiod":"24x7",
+                        "contactgroups":"admins"
 			},
 			{
 			"name":"Memory-vmmemctl",
 			"type":"Memory",
 			"rolluptype":"average",
 			"nameinfo":"vmmemctl",
+                        "instance":"",
 			"whitelist":[],
 			"blacklist":[],
 			"warn":"",
-			"critical":""
+			"critical":"",
+                        "notificationoptions":"w,c,r",
+                        "checkperiod":"24x7",
+                        "notificationinterval":"30",
+                        "notificationperiod":"24x7",
+                        "maxcheckattempts":"4",
+                        "notificationperiod":"24x7",
+                        "contactgroups":"admins"
 			},
 			{
 			"name":"Memory-consumed",
 			"type":"Memory",
 			"rolluptype":"average",
 			"nameinfo":"consumed",
+                        "instance":"",
 			"whitelist":[],
 			"blacklist":[],
 			"warn":"",
-			"critical":""
+			"critical":"",
+                        "notificationoptions":"w,c,r",
+                        "checkperiod":"24x7",
+                        "notificationinterval":"30",
+                        "notificationperiod":"24x7",
+                        "maxcheckattempts":"4",
+                        "notificationperiod":"24x7",
+                        "contactgroups":"admins"
 			}
                         ],
 		"checks":[
@@ -60,7 +92,14 @@
                         "stdvalues":{},
                         "whitelist":[],
                         "blacklist":[],
-                        "properties":["overallStatus"]
+                        "properties":["overallStatus"],
+                        "notificationoptions":"w,c,r",
+                        "checkperiod":"24x7",
+                        "notificationinterval":"30",
+                        "notificationperiod":"24x7",
+                        "maxcheckattempts":"4",
+                        "notificationperiod":"24x7",
+                        "contactgroups":"admins"
                         },
 			{
 			"name":"Issues",
@@ -69,7 +108,14 @@
 			"whitelist":[],
 			"blacklist":[],
 			"stdvalues":{},
-			"properties":["configIssue"]
+			"properties":["configIssue"],
+                        "notificationoptions":"w,c,r",
+                        "checkperiod":"24x7",
+                        "notificationinterval":"30",
+                        "notificationperiod":"24x7",
+                        "maxcheckattempts":"4",
+                        "notificationperiod":"24x7",
+                        "contactgroups":"admins"
 			},
 			{
 			"name":"Alarmstate",
@@ -77,7 +123,14 @@
 			"stdvalues":{},
 			"whitelist":[],
 			"blacklist":[],
-			"properties":["triggeredAlarmState"]
+			"properties":["triggeredAlarmState"],
+                        "notificationoptions":"w,c,r",
+                        "checkperiod":"24x7",
+                        "notificationinterval":"30",
+                        "notificationperiod":"24x7",
+                        "maxcheckattempts":"4",
+                        "notificationperiod":"24x7",
+                        "contactgroups":"admins"
 			},
 			{
 			"name":"HAstate",
@@ -85,7 +138,14 @@
 			"stdvalues":{"admissionControlEnabled":"1","hostMonitoring":"enabled","enabled":"1"},
 			"whitelist":[],
 			"blacklist":[],
-			"properties":["configuration.dasConfig"]
+			"properties":["configuration.dasConfig"],
+                        "notificationoptions":"w,c,r",
+                        "checkperiod":"24x7",
+                        "notificationinterval":"30",
+                        "notificationperiod":"24x7",
+                        "maxcheckattempts":"4",
+                        "notificationperiod":"24x7",
+                        "contactgroups":"admins"
 			},
 			{
 			"name":"DRSstate",
@@ -93,7 +153,14 @@
 			"stdvalues":{"defaultVmBehavior":"fullyAutomated","enabled":"1"},
 			"whitelist":[],
 			"blacklist":[],
-			"properties":["configuration.drsConfig"]
+			"properties":["configuration.drsConfig"],
+                        "notificationoptions":"w,c,r",
+                        "checkperiod":"24x7",
+                        "notificationinterval":"30",
+                        "notificationperiod":"24x7",
+                        "maxcheckattempts":"4",
+                        "notificationperiod":"24x7",
+                        "contactgroups":"admins"
 			}
 			],
 		"externalchecks":[
@@ -107,90 +174,234 @@
 			"type":"CPU",
 			"rolluptype":"average",
 			"nameinfo":"usagemhz",
+                        "instance":"",
 			"whitelist":[],
 			"blacklist":[],
 			"warn":"",
-			"critical":""
+			"critical":"",
+                        "notificationoptions":"w,c,r",
+                        "checkperiod":"24x7",
+                        "notificationinterval":"30",
+                        "notificationperiod":"24x7",
+                        "maxcheckattempts":"4",
+                        "notificationperiod":"24x7",
+                        "contactgroups":"admins"
 			},
                         {
 			"name":"CPU-wait",
 			"type":"CPU",
 			"rolluptype":"summation",
 			"nameinfo":"wait",
+                        "instance":"",
 			"whitelist":[],
-			"blacklist":["DC0_C0"],
+			"blacklist":[],
 			"warn":"",
-			"critical":""
+			"critical":"",
+                        "notificationoptions":"w,c,r",
+                        "checkperiod":"24x7",
+                        "notificationinterval":"30",
+                        "notificationperiod":"24x7",
+                        "maxcheckattempts":"4",
+                        "notificationperiod":"24x7",
+                        "contactgroups":"admins"
 			},
 			{
 			"name":"Memory-shared",
 			"type":"Memory",
 			"rolluptype":"average",
 			"nameinfo":"shared",
+                        "instance":"",
 			"whitelist":[],
 			"blacklist":[],
 			"warn":"",
-                        "critical":""
+                        "critical":"",
+                        "notificationoptions":"w,c,r",
+                        "checkperiod":"24x7",
+                        "notificationinterval":"30",
+                        "notificationperiod":"24x7",
+                        "maxcheckattempts":"4",
+                        "notificationperiod":"24x7",
+                        "contactgroups":"admins"
 			},
                         {
 			"name":"CPU-ready",
 			"type":"CPU",
 			"rolluptype":"summation",
 			"nameinfo":"ready",
+                        "instance":"",
 			"whitelist":[],
 			"blacklist":[],
-			"warn":"",
-			"critical":""
+			"warn":"3",
+			"critical":"5",
+                        "notificationoptions":"w,c,r",
+                        "checkperiod":"24x7",
+                        "notificationinterval":"30",
+                        "notificationperiod":"24x7",
+                        "maxcheckattempts":"4",
+                        "notificationperiod":"24x7",
+                        "contactgroups":"admins"
 			},
 			{
 			"name":"Memory-usage",
 			"type":"Memory",
 			"rolluptype":"average",
 			"nameinfo":"usage",
+                        "instance":"",
 			"whitelist":[],
 			"blacklist":[],
 			"warn":"",
-			"critical":""
+			"critical":"",
+                        "notificationoptions":"w,c,r",
+                        "checkperiod":"24x7",
+                        "notificationinterval":"30",
+                        "notificationperiod":"24x7",
+                        "maxcheckattempts":"4",
+                        "notificationperiod":"24x7",
+                        "contactgroups":"admins"
 			},
 			{
 			"name":"Memory-vmmemctl",
 			"type":"Memory",
 			"rolluptype":"average",
 			"nameinfo":"vmmemctl",
+                        "instance":"",
 			"whitelist":[],
 			"blacklist":[],
 			"warn":"",
-			"critical":""
+			"critical":"",
+                        "notificationoptions":"w,c,r",
+                        "checkperiod":"24x7",
+                        "notificationinterval":"30",
+                        "notificationperiod":"24x7",
+                        "maxcheckattempts":"4",
+                        "notificationperiod":"24x7",
+                        "contactgroups":"admins"
 			},
 			{
 			"name":"Memory-Activewrite",
 			"type":"Memory",
 			"rolluptype":"average",
 			"nameinfo":"activewrite",
+                        "instance":"",
 			"whitelist":[],
 			"blacklist":[],
 			"warn":"",
-			"critical":""
+			"critical":"",
+                        "notificationoptions":"w,c,r",
+                        "checkperiod":"24x7",
+                        "notificationinterval":"30",
+                        "notificationperiod":"24x7",
+                        "maxcheckattempts":"4",
+                        "notificationperiod":"24x7",
+                        "contactgroups":"admins"
 			},
 			{
 			"name":"Memory-Swapoutrate",
 			"type":"Memory",
 			"rolluptype":"average",
 			"nameinfo":"swapoutRate",
+                        "instance":"",
 			"whitelist":[],
 			"blacklist":[],
 			"warn":"",
-			"critical":""
+			"critical":"",
+                        "notificationoptions":"w,c,r",
+                        "checkperiod":"24x7",
+                        "notificationinterval":"30",
+                        "notificationperiod":"24x7",
+                        "maxcheckattempts":"4",
+                        "notificationperiod":"24x7",
+                        "contactgroups":"admins"
 			},
+                        {
+                        "name":"Network-DroppedTX",
+                        "type":"Network",
+                        "rolluptype":"summation",
+                        "nameinfo":"droppedTx",
+                        "instance":"vmnic2",
+                        "whitelist":[],
+                        "blacklist":[],
+                        "warn":"",
+                        "critical":"",
+                        "notificationoptions":"w,c,r",
+                        "checkperiod":"24x7",
+                        "notificationinterval":"30",
+                        "notificationperiod":"24x7",
+                        "maxcheckattempts":"4",
+                        "notificationperiod":"24x7",
+                        "contactgroups":"admins"
+                        },
+                        {
+                        "name":"Network-DroppedRX",
+                        "type":"Network",
+                        "rolluptype":"summation",
+                        "nameinfo":"droppedRx",
+                        "instance":"",
+                        "whitelist":[],
+                        "blacklist":[],
+                        "warn":"",
+                        "critical":"",
+                        "notificationoptions":"w,c,r",
+                        "checkperiod":"24x7",
+                        "notificationinterval":"30",
+                        "notificationperiod":"24x7",
+                        "maxcheckattempts":"4",
+                        "notificationperiod":"24x7",
+                        "contactgroups":"admins"
+                        },
+                        {
+                        "name":"Network-ErrorsTX",
+                        "type":"Network",
+                        "rolluptype":"summation",
+                        "nameinfo":"errorsTx",
+                        "instance":"",
+                        "whitelist":[],
+                        "blacklist":[],
+                        "warn":"",
+                        "critical":"",
+                        "notificationoptions":"w,c,r",
+                        "checkperiod":"24x7",
+                        "notificationinterval":"30",
+                        "notificationperiod":"24x7",
+                        "maxcheckattempts":"4",
+                        "notificationperiod":"24x7",
+                        "contactgroups":"admins"
+                        },
+                        {
+                        "name":"Network-Hannes-test",
+                        "type":"Network",
+                        "rolluptype":"average",
+                        "nameinfo":"bytesRx",
+                        "instance":"",
+                        "whitelist":[],
+                        "blacklist":[],
+                        "warn":"",
+                        "critical":"",
+                        "notificationoptions":"w,c,r",
+                        "checkperiod":"24x7",
+                        "notificationinterval":"30",
+                        "notificationperiod":"24x7",
+                        "maxcheckattempts":"4",
+                        "notificationperiod":"24x7",
+                        "contactgroups":"admins"
+                        },
 			{
 			"name":"Memory-consumed",
 			"type":"Memory",
 			"rolluptype":"average",
 			"nameinfo":"consumed",
+                        "instance":"",
 			"whitelist":[],
 			"blacklist":[],
 			"warn":"",
-			"critical":""
+			"critical":"",
+                        "notificationoptions":"w,c,r",
+                        "checkperiod":"24x7",
+                        "notificationinterval":"30",
+                        "notificationperiod":"24x7",
+                        "maxcheckattempts":"4",
+                        "notificationperiod":"24x7",
+                        "contactgroups":"admins"
 			}
 			],	
 		"checks":[
@@ -198,17 +409,31 @@
                         "name":"OverallStatus",
                         "function":"OverallStatus",
                         "stdvalues":{},
-                        "whitelist":["DC0_C0_H0","DC0_C0_H1"],
+                        "whitelist":[],
                         "blacklist":[],
-                        "properties":["overallStatus"]
+                        "properties":["overallStatus"],
+                        "notificationoptions":"w,c,r",
+                        "checkperiod":"24x7",
+                        "notificationinterval":"30",
+                        "notificationperiod":"24x7",
+                        "maxcheckattempts":"4",
+                        "notificationperiod":"24x7",
+                        "contactgroups":"admins"
                         },
 			{
 			"name":"Issues",
 			"function":"Issues",
 			"stdvalues":{},
 			"whitelist":[],
-			"blacklist":["DC0_C0_H0","DC0_C0_H1"],
-			"properties":["configIssue"]
+			"blacklist":[],
+			"properties":["configIssue"],
+                        "notificationoptions":"w,c,r",
+                        "checkperiod":"24x7",
+                        "notificationinterval":"30",
+                        "notificationperiod":"24x7",
+                        "maxcheckattempts":"4",
+                        "notificationperiod":"24x7",
+                        "contactgroups":"admins"
 			},
 			{
 			"name":"Alarmstate",
@@ -216,7 +441,14 @@
 			"stdvalues":{},
 			"whitelist":[],
 			"blacklist":[],
-			"properties":["triggeredAlarmState"]
+			"properties":["triggeredAlarmState"],
+                        "notificationoptions":"w,c,r",
+                        "checkperiod":"24x7",
+                        "notificationinterval":"30",
+                        "notificationperiod":"24x7",
+                        "maxcheckattempts":"4",
+                        "notificationperiod":"24x7",
+                        "contactgroups":"admins"
 			},
 			{
 			"name":"ConnectionState",
@@ -224,7 +456,14 @@
 			"stdvalues":{},
 			"whitelist":[],
 			"blacklist":[],
-			"properties":["runtime.connectionState"]
+			"properties":["runtime.connectionState"],
+                        "notificationoptions":"w,c,r",
+                        "checkperiod":"24x7",
+                        "notificationinterval":"30",
+                        "notificationperiod":"24x7",
+                        "maxcheckattempts":"4",
+                        "notificationperiod":"24x7",
+                        "contactgroups":"admins"
 			},
 			{
 			"name":"Hardware",
@@ -232,7 +471,14 @@
 			"stdvalues":{},
 			"whitelist":[],
 			"blacklist":[],
-			"properties":["summary.runtime.healthSystemRuntime.systemHealthInfo.numericSensorInfo"]
+			"properties":["summary.runtime.healthSystemRuntime.systemHealthInfo.numericSensorInfo","summary.runtime.healthSystemRuntime.hardwareStatusInfo"],
+                        "notificationoptions":"w,c,r",
+                        "checkperiod":"24x7",
+                        "notificationinterval":"30",
+                        "notificationperiod":"24x7",
+                        "maxcheckattempts":"4",
+                        "notificationperiod":"24x7",
+                        "contactgroups":"admins"
 			},
 			{
 			"name":"NetworkState",
@@ -240,7 +486,14 @@
 			"stdvalues":{"switchmtu":"9000"},
 			"whitelist":[],
 			"blacklist":[],
-			"properties":["config.network.vswitch","config.network.vnic","config.network.proxySwitch","config.network.pnic"]
+			"properties":["config.network.vswitch","config.network.vnic","config.network.proxySwitch","config.network.pnic"],
+                        "notificationoptions":"w,c,r",
+                        "checkperiod":"24x7",
+                        "notificationinterval":"30",
+                        "notificationperiod":"24x7",
+                        "maxcheckattempts":"4",
+                        "notificationperiod":"24x7",
+                        "contactgroups":"admins"
 			},
 			{
 			"name":"ServiceState",
@@ -248,7 +501,14 @@
 			"stdvalues":{"TSM":0,"TSM-SSH":0,"snmpd":0},
 			"whitelist":[],
 			"blacklist":[],
-			"properties":["config.service.service"]
+			"properties":["config.service.service"],
+                        "notificationoptions":"w,c,r",
+                        "checkperiod":"24x7",
+                        "notificationinterval":"30",
+                        "notificationperiod":"24x7",
+                        "maxcheckattempts":"4",
+                        "notificationperiod":"24x7",
+                        "contactgroups":"admins"
 			},
 			{
 			"name":"ComponentCheck",
@@ -256,46 +516,36 @@
 			"stdvalues":{"BNX-Firmware":"bnx2 device firmware 1.9.6 ","BNX-Driver":"bnx2 driver 1.6.10 "},
 			"whitelist":[],
 			"blacklist":[],
-			"properties":["summary.runtime.healthSystemRuntime.systemHealthInfo.numericSensorInfo"]
+			"properties":["summary.runtime.healthSystemRuntime.systemHealthInfo.numericSensorInfo"],
+                        "notificationoptions":"w,c,r",
+                        "checkperiod":"24x7",
+                        "notificationinterval":"30",
+                        "notificationperiod":"24x7",
+                        "maxcheckattempts":"4",
+                        "notificationperiod":"24x7",
+                        "contactgroups":"admins"
 			}
 			],
                 "externalchecks":[
-			{
-			"name":"Check-SSH",
-			"whitelist":[],
-			"blacklist":[],
-			"cmd":"check_ssh!$HOSTADDRESS$",
-			"period":"5"
-			},
                         {
 			"name":"Check-MGMT",
 			"whitelist":[],
 			"blacklist":[],
-			"cmd":"check_tcp!448!$HOSTADDRESS$",
-			"period":"10"
-			},
-			{
-			"name":"Check-SSL",
-			"whitelist":[],
-			"blacklist":[],
-			"cmd":"fakessl",
-			"period":"5"
-			}	
+			"cmd":"check_tcp!443!$HOSTADDRESS$",
+			"period":"10",
+                        "notificationoptions":"w,c,r",
+                        "checkperiod":"24x7",
+                        "notificationinterval":"30",
+                        "notificationperiod":"24x7",
+                        "maxcheckattempts":"4",
+                        "notificationperiod":"24x7",
+                        "contactgroups":"admins"
+			}
 			]
 		},
 	"datastore":{
 		"enabled":"1",
                 "performancemetrics":[
-                        {
-			"name":"CPU-numberReadAveraged",
-			"type":"CPU",
-			"rolluptype":"rate",
-			"nameinfo":"numberReadAveraged",
-			"whitelist":[],
-			"blacklist":[],
-			"warn":"",
-			"critical":""
-			}
                         ],
 		"checks":[
 			{
@@ -304,7 +554,14 @@
                         "stdvalues":{},
                         "whitelist":[],
                         "blacklist":[],
-                        "properties":["configIssue"]
+                        "properties":["configIssue"],
+                        "notificationoptions":"w,c,r",
+                        "checkperiod":"24x7",
+                        "notificationinterval":"30",
+                        "notificationperiod":"24x7",
+                        "maxcheckattempts":"4",
+                        "notificationperiod":"24x7",
+                        "contactgroups":"admins"
                         },
                         {
                         "name":"OverallStatus",
@@ -312,7 +569,14 @@
                         "stdvalues":{},
                         "whitelist":[],
                         "blacklist":[],
-                        "properties":["overallStatus"]
+                        "properties":["overallStatus"],
+                        "notificationoptions":"w,c,r",
+                        "checkperiod":"24x7",
+                        "notificationinterval":"30",
+                        "notificationperiod":"24x7",
+                        "maxcheckattempts":"4",
+                        "notificationperiod":"24x7",
+                        "contactgroups":"admins"
                         },
 			{
 			"name":"Capacity",
@@ -320,7 +584,14 @@
                         "stdvalues":{"warn":"80","critical":"90"},
                         "whitelist":[],
                         "blacklist":[],
-                        "properties":["summary.capacity","summary.freeSpace"]
+                        "properties":["summary.capacity","summary.freeSpace"],
+                        "notificationoptions":"w,c,r",
+                        "checkperiod":"24x7",
+                        "notificationinterval":"30",
+                        "notificationperiod":"24x7",
+                        "maxcheckattempts":"4",
+                        "notificationperiod":"24x7",
+                        "contactgroups":"admins"
                         },
                         {
                         "name":"Alarmstate",
@@ -328,7 +599,14 @@
                         "stdvalues":{},
                         "whitelist":[],
                         "blacklist":[],
-                        "properties":["triggeredAlarmState"]
+                        "properties":["triggeredAlarmState"],
+                        "notificationoptions":"w,c,r",
+                        "checkperiod":"24x7",
+                        "notificationinterval":"30",
+                        "notificationperiod":"24x7",
+                        "maxcheckattempts":"4",
+                        "notificationperiod":"24x7",
+                        "contactgroups":"admins"
                         }
 			],
                 "externalchecks":[
@@ -342,70 +620,86 @@
 			"type":"CPU",
 			"rolluptype":"average",
 			"nameinfo":"usagemhz",
+                        "instance":"",
 			"warn":"",
 			"whitelist":[],
 			"blacklist":[],
-			"critical":""
+			"critical":"",
+                        "notificationoptions":"w,c,r",
+                        "checkperiod":"24x7",
+                        "notificationinterval":"30",
+                        "notificationperiod":"24x7",
+                        "maxcheckattempts":"4",
+                        "notificationperiod":"24x7",
+                        "contactgroups":"admins"
 			},
        	        	{
 			"name":"CPU-wait",
 			"type":"CPU",
 			"rolluptype":"summation",
 			"nameinfo":"wait",
+                        "instance":"",
 			"warn":"",
 			"whitelist":[],
 			"blacklist":[],
-                        "critical":""
+                        "critical":"",
+                        "notificationoptions":"w,c,r",
+                        "checkperiod":"24x7",
+                        "notificationinterval":"30",
+                        "maxcheckattempts":"4",
+                        "notificationperiod":"24x7",
+                        "contactgroups":"admins"
 			},
                 	{
 			"name":"CPU-ready",
 			"type":"CPU",
 			"rolluptype":"summation",
 			"nameinfo":"ready",
+                        "instance":"",
 			"warn":"",
 			"whitelist":[],
 			"blacklist":[],
-                        "critical":""
+                        "critical":"",
+                        "notificationoptions":"w,c,r",
+                        "checkperiod":"24x7",
+                        "notificationinterval":"30",
+                        "maxcheckattempts":"4",
+                        "notificationperiod":"24x7",
+                        "contactgroups":"admins"
 			},
                 	{
 			"name":"Memory-active",
 			"type":"Memory",
 			"rolluptype":"average",
 			"nameinfo":"active",
+                        "instance":"",
 			"warn":"",
 			"whitelist":[],
 			"blacklist":[],
-                        "critical":""
+                        "critical":"",
+                        "notificationoptions":"w,c,r",
+                        "checkperiod":"24x7",
+                        "notificationinterval":"30",
+                        "maxcheckattempts":"4",
+                        "notificationperiod":"24x7",
+                        "contactgroups":"admins"
 			},
 			{
 			"name":"Memory-vmmemctl",
 			"type":"Memory",
 			"rolluptype":"average",
 			"nameinfo":"vmmemctl",
+                        "instance":"",
 			"warn":"",
 			"whitelist":[],
 			"blacklist":[],
-                        "critical":""
-			},
-			{
-			"name":"Disk-write",
-			"type":"Disk",
-			"rolluptype":"average",
-			"nameinfo":"write",
-			"warn":"",
-			"whitelist":[],
-			"blacklist":[],
-			"critical":""
-			},
-			{
-			"name":"Disk-read",
-			"type":"Disk",
-			"rolluptype":"average",
-			"nameinfo":"read",
-			"warn":"",
-			"whitelist":[],
-			"blacklist":[],
-			"critical":""
+                        "critical":"",
+                        "notificationoptions":"w,c,r",
+                        "checkperiod":"24x7",
+                        "notificationinterval":"30",
+                        "maxcheckattempts":"4",
+                        "notificationperiod":"24x7",
+                        "contactgroups":"admins"
 			}
                         ],
 		"checks":[
@@ -415,7 +709,13 @@
                         "stdvalues":{},
                         "whitelist":[],
                         "blacklist":[],
-                        "properties":["overallStatus"]
+                        "properties":["overallStatus"],
+                        "notificationoptions":"w,c,r",
+                        "checkperiod":"24x7",
+                        "notificationinterval":"30",
+                        "maxcheckattempts":"4",
+                        "notificationperiod":"24x7",
+                        "contactgroups":"admins"
                         },
 			{
 			"name":"Issues",
@@ -423,7 +723,13 @@
 			"stdvalues":{},
 			"whitelist":[],
 			"blacklist":[],
-			"properties":["configIssue"]
+			"properties":["configIssue"],
+                        "notificationoptions":"w,c,r",
+                        "checkperiod":"24x7",
+                        "notificationinterval":"30",
+                        "maxcheckattempts":"4",
+                        "notificationperiod":"24x7",
+                        "contactgroups":"admins"
 			},
 			{
 			"name":"Alarmstate",
@@ -431,15 +737,27 @@
 			"stdvalues":{},
 			"whitelist":[],
 			"blacklist":[],
-			"properties":["triggeredAlarmState"]
+			"properties":["triggeredAlarmState"],
+                        "notificationoptions":"w,c,r",
+                        "checkperiod":"24x7",
+                        "notificationinterval":"30",
+                        "maxcheckattempts":"4",
+                        "notificationperiod":"24x7",
+                        "contactgroups":"admins"
 			},
 			{
 			"name":"GuestDisks",
 			"function":"GuestDisks",
-			"stdvalues":{"warn":"80","critical":"90"},
+			"stdvalues":{"warn":"80","critical":"90","exception":["P:\\"]},
 			"whitelist":[],
 			"blacklist":[],
-			"properties":["guest.disk"]
+			"properties":["guest.disk"],
+                        "notificationoptions":"w,c,r",
+                        "checkperiod":"24x7",
+                        "notificationinterval":"30",
+                        "maxcheckattempts":"4",
+                        "notificationperiod":"24x7",
+                        "contactgroups":"admins"
 			},
 			{
 			"name":"GuestConnectionState",
@@ -447,7 +765,13 @@
 			"stdvalues":{},
 			"whitelist":[],
 			"blacklist":[],
-			"properties":["summary.runtime.connectionState"]
+			"properties":["summary.runtime.connectionState"],
+                        "notificationoptions":"w,c,r",
+                        "checkperiod":"24x7",
+                        "notificationinterval":"30",
+                        "maxcheckattempts":"4",
+                        "notificationperiod":"24x7",
+                        "contactgroups":"admins"
 			},
 			{
 			"name":"GuestInstallermount",
@@ -455,7 +779,13 @@
 			"stdvalues":{},
 			"whitelist":[],
 			"blacklist":[],
-			"properties":["summary.runtime.toolsInstallerMounted"]
+			"properties":["summary.runtime.toolsInstallerMounted"],
+                        "notificationoptions":"w,c,r",
+                        "checkperiod":"24x7",
+                        "notificationinterval":"30",
+                        "maxcheckattempts":"4",
+                        "notificationperiod":"24x7",
+                        "contactgroups":"admins"
 			},
 			{
 			"name":"GuestSnapshots",
@@ -463,31 +793,16 @@
 			"stdvalues":{"warn":"10","critical":"14"},
 			"whitelist":[],
 			"blacklist":[],
-			"properties":["snapshot.rootSnapshotList"]
+			"properties":["snapshot"],
+                        "notificationoptions":"w,c,r",
+                        "checkperiod":"24x7",
+                        "notificationinterval":"30",
+                        "maxcheckattempts":"4",
+			"notificationperiod":"24x7",
+                        "contactgroups":"admins"
 			}
 			],
                 "externalchecks":[
-			{
-			"name":"Fake-SSH",
-			"whitelist":[],
-			"blacklist":[],
-			"cmd":"fakessh",
-			"period":"5"
-			},
-                        {
-			"name":"Fake-MGMT",
-			"whitelist":[],
-			"blacklist":[],
-			"cmd":"fakemgmt",
-			"period":"5"
-			},
-			{
-			"name":"Fake-SSL",
-			"whitelist":[],
-			"blacklist":[],
-			"cmd":"fakessl",
-			"period":"5"
-			}
 		]
 		}
 	}

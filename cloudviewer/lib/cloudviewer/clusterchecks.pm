@@ -13,7 +13,7 @@ my @message=@{$header};
 my $status=0;
 my @dependencies=("configIssue");
 
-if(cloudviewer::helper::checkdependency(\@dependencies,$checkdata->{properties}) eq 0)
+if(cloudviewer::helper::checkdependency(\@dependencies,$checkdata->{properties},$object) eq 0)
 {
 	my $Issues=$object->{configuration}->{"configIssue"};
 	if($Issues)
@@ -49,7 +49,7 @@ my @message=@{$header};
 my $status=0;
 my @dependencies=("triggeredAlarmState");
 
-if(cloudviewer::helper::checkdependency(\@dependencies,$checkdata->{properties}) eq 0)
+if(cloudviewer::helper::checkdependency(\@dependencies,$checkdata->{properties},$object) eq 0)
 {
 	my $Alarms=$object->{configuration}->{"triggeredAlarmState"};
 	if($Alarms)
@@ -86,7 +86,7 @@ my $status=0;
 my @dependencies=("configuration.drsConfig");
 my @dependencies_std=("defaultVmBehavior","enabled");
 
-if(cloudviewer::helper::checkdependency(\@dependencies,$checkdata->{properties}) eq 0 and cloudviewer::helper::checkdependencystd(\@dependencies_std,$checkdata->{stdvalues}) eq 0)
+if(cloudviewer::helper::checkdependency(\@dependencies,$checkdata->{properties},$object) eq 0 and cloudviewer::helper::checkdependencystd(\@dependencies_std,$checkdata->{stdvalues}) eq 0)
 {
 	my $drsobj=$object->{configuration}->{$checkdata->{properties}[0]};
 	my $stdvalues=$checkdata->{stdvalues};
@@ -130,7 +130,7 @@ my @message=@{$header};
 my @dependencies=("configuration.dasConfig");
 my @dependencies_std=("hostMonitoring","admissionControlEnabled","enabled");
 
-if(cloudviewer::helper::checkdependency(\@dependencies,$checkdata->{properties}) eq 0 and cloudviewer::helper::checkdependencystd(\@dependencies_std,$checkdata->{stdvalues}) eq 0)
+if(cloudviewer::helper::checkdependency(\@dependencies,$checkdata->{properties},$object) eq 0 and cloudviewer::helper::checkdependencystd(\@dependencies_std,$checkdata->{stdvalues}) eq 0)
 {
 	my $dasobj=$object->{configuration}->{"configuration.dasConfig"};
 	my $stdvalues=$checkdata->{stdvalues};
@@ -181,7 +181,7 @@ my @message=@{$header};
 my $status=0;
 my @dependencies=("overallStatus");
 
-if(cloudviewer::helper::checkdependency(\@dependencies,$checkdata->{properties}) eq 0)
+if(cloudviewer::helper::checkdependency(\@dependencies,$checkdata->{properties},$object) eq 0)
 {
 	my $ostatus=$object->{configuration}->{"overallStatus"};
 	if($ostatus->val eq "red")

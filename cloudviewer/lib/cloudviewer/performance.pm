@@ -2,6 +2,7 @@ package cloudviewer::performance;
 
 use strict;
 use warnings;
+use Data::Dumper;
 
 sub check_perf
 {
@@ -20,6 +21,9 @@ my $performance=0;
 my $value;
 my $unit=$table->{$check->{type}}->{$check->{nameinfo}}->{unit};
 my $func;
+my $lastvalue;
+my @tempvalue;
+
 
 if((scalar @{$object->{performance}}) gt 0)
 {
@@ -29,8 +33,11 @@ if((scalar @{$object->{performance}}) gt 0)
 		if($metric->id->counterId eq $key)
 		{
 			$checker=1;
-			$performance=$metric->value;
-			$value=$metric->value;
+			## Small Hack because Clusters return too much values
+			@tempvalue=split(/,/,$metric->value);
+			$lastvalue=(scalar @tempvalue)-1;
+			$performance=$tempvalue[$lastvalue];
+			$value=$tempvalue[$lastvalue];
 
 			## Converting value with wanted function
 			if($check->{nameinfo} eq "ready")
@@ -47,11 +54,11 @@ if((scalar @{$object->{performance}}) gt 0)
 			else
 			{
 
-				if($value lt $check->{'warn'})
+				if($value < $check->{'warn'})
 				{
 					push(@message,"OK:      Performancecounter:$check->{type}:$check->{nameinfo} is green. Value: $value $unit");	
 				}
-				elsif($value gt $check->{'warn'} and $metric->value lt $check->{'critical'})
+				elsif($value >= $check->{'warn'} and $value < $check->{'critical'})
 				{
 					$status=1;
 			 		push(@message,"Warn:      Performancecounter:$check->{type}:$check->{nameinfo} is yellow. Value: $value $unit");
@@ -72,10 +79,9 @@ if((scalar @{$object->{performance}}) gt 0)
 }
 else
 {
-	$status=2;
+	$status=0;
 	push(@message,"Warning:      No counters delivered.");
 }
-
 return {'name' => $object->{name},'message' => \@message, 'status' => $status, 'service' => $$prefix.$checkdata, performance => $performance };
 }
 

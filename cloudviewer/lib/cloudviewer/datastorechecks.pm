@@ -13,7 +13,7 @@ my @message=@{$header};
 my $status=0;
 my @dependencies=("configIssue");
 
-if(cloudviewer::helper::checkdependency(\@dependencies,$checkdata->{properties}) eq 0)
+if(cloudviewer::helper::checkdependency(\@dependencies,$checkdata->{properties},$object) eq 0)
 {
 	my $Issues=$object->{configuration}->{"configIssue"};
 	if($Issues)
@@ -49,7 +49,7 @@ my @message=@{$header};
 my $status=0;
 my @dependencies=("triggeredAlarmState");
 
-if(cloudviewer::helper::checkdependency(\@dependencies,$checkdata->{properties}) eq 0)
+if(cloudviewer::helper::checkdependency(\@dependencies,$checkdata->{properties},$object) eq 0)
 {
 	my $Alarms=$object->{configuration}->{"triggeredAlarmState"};
 	if($Alarms)
@@ -86,7 +86,7 @@ my $status=0;
 my $filledspacepercent=0;
 my @dependencies=("summary.capacity","summary.freeSpace");
 
-if(cloudviewer::helper::checkdependency(\@dependencies,$checkdata->{properties}) eq 0)
+if(cloudviewer::helper::checkdependency(\@dependencies,$checkdata->{properties},$object) eq 0)
 {
 	my $capacity=$object->{configuration}->{"summary.capacity"};
 	my $freespace=$object->{configuration}->{"summary.freeSpace"};
@@ -99,11 +99,11 @@ if(cloudviewer::helper::checkdependency(\@dependencies,$checkdata->{properties})
 	}
 	else
 	{
-		if($filledspacepercent lt $stdvalues->{'warn'})
+		if($filledspacepercent < $stdvalues->{'warn'})
 		{
 			push(@message,"OK:      Space is green. Filled space for  $object->{name} : ".$filledspacepercent);
 		}
-		elsif($filledspacepercent gt $stdvalues->{'warn'} and $filledspacepercent  lt $stdvalues->{'critical'})
+		elsif($filledspacepercent >= $stdvalues->{'warn'} and $filledspacepercent  < $stdvalues->{'critical'})
 		{
 			$status=1;
 			push(@message,"Warn:      Space is yellow. Filled space for  $object->{name} : ".$filledspacepercent);
@@ -134,7 +134,7 @@ my @message=@{$header};
 my $status=0;
 my @dependencies=("overallStatus");
 
-if(cloudviewer::helper::checkdependency(\@dependencies,$checkdata->{properties}) eq 0)
+if(cloudviewer::helper::checkdependency(\@dependencies,$checkdata->{properties},$object) eq 0)
 {
 	my $ostatus=$object->{configuration}->{"overallStatus"};
 	if($ostatus->val eq "red")

@@ -140,6 +140,7 @@ if($sessiondir !~ /^\/([a-z0-9]*\/?)*\/$/)
 my $vcname=join("",$url =~ /\/\/([\d|\D]+)\:/);
 my $sessionfile_name=$sessiondir.$vcname;
 
+
 if(-e $sessionfile_name)
 {
 	eval {Vim::load_session(session_file => $sessionfile_name)}; ##Testing the connection with a sessionfile
@@ -197,7 +198,7 @@ foreach my $mode (@modes)
         {
                	$view_type="VirtualMachine";
                	$interval=20;
-		$config={"name"=>"name","ip"=>"guest.ipAddress","parent"=>"runtime.host","storage"=>"datastore","power"=>"runtime.powerState"};
+		$config={"name"=>"name","ip"=>"guest.ipAddress","parent"=>"runtime.host","storage"=>"datastore","power"=>"runtime.powerState","template"=>"config.template"};
         }
         if($$self{updatemode} eq 0)
       	{
@@ -233,9 +234,9 @@ foreach my $mode (@modes)
 			{
 				$tempname=~s/[^A-Za-z0-9#\.\-_]/ /g;
 			}
-				
 			$perf_query_spec = PerfQuerySpec->new(entity => $i,metricId => $perf_metric_ids, format => 'csv', intervalId => $interval, maxSample => 1);
 			$perf_data = $perfmgr_view->QueryPerf(querySpec => $perf_query_spec);
+			
 			if($mode eq "cluster")
 			{
 				$parent="";
@@ -249,10 +250,18 @@ foreach my $mode (@modes)
                         }
                         if($mode eq "vm")
                         {
-				$item="runtime.host";
-				#Set ID of VM in Hostname
-				$tempname=$tempname." ++".$i->{'mo_ref'}->value."++";
-                                $parent=$dependenciehash{host}{$i->get_property($item)->value}{name};
+                                if($i->get_property('config.template') eq "false")
+                                {
+					$item="runtime.host";
+					#Set ID of VM in Hostname
+					#$tempname=$tempname." ++".$i->{'mo_ref'}->value."++";
+                                	$parent=$dependenciehash{host}{$i->get_property($item)->value}{name};
+				}
+                                else
+                                {
+                                        next;
+                                }
+
                         }
 
 
@@ -291,10 +300,17 @@ foreach my $mode (@modes)
                         }
                         if($mode eq "vm")
                         {
-                                $item="runtime.host";
-				#Set ID of VM in Hostname
-				$tempname=$tempname." ++".$i->{'mo_ref'}->value."++";
-                                $parent=$dependenciehash{host}{$i->get_property($item)->value}{name};
+				if($i->get_property('config.template') eq "false")
+				{
+                                	$item="runtime.host";
+					#Set ID of VM in Hostname
+					#$tempname=$tempname." ++".$i->{'mo_ref'}->value."++";
+                                	$parent=$dependenciehash{host}{$i->get_property($item)->value}{name};	
+				}
+				else
+				{
+					next;
+				}
                         }
 
                         push(@{$self->{$mode}},{performance_table=>"",performance=>"",name=>$tempname." in $vcid",configuration=>$i,parent => $parent});
@@ -357,7 +373,7 @@ foreach my $i (@$filterlist)
 	{
 		if($i->{type} eq $y->groupInfo->label and $i->{rolluptype} eq $y->rollupType->val and $i->{nameinfo} eq $y->nameInfo->key)
 		{	
-			$idobj=PerfMetricId->new(counterId => $y->key,instance => '' ); 
+			$idobj=PerfMetricId->new(counterId => $y->key,instance => $i->{instance} ); 
 			push(@newarray,$idobj);
 			##Creating an extra Hashref because PerfMetricId does not support a Label attribute
 			$newhash->{$i->{type}}->{$i->{nameinfo}}={key => $y->key,unit=>$y->unitInfo->label};
@@ -445,15 +461,52 @@ foreach my $mode (@modes)
 
 	foreach my $y (@$checks)
 	{
-        	push(@{$arrays->{$mode}},{name => $id."-".$mode."-".$y->{name},cmd => "",period => ""});
+        	push(@{$arrays->{$mode}},
+			{
+			name => $id."-".$mode."-".$y->{name},
+			cmd => "",
+                        period => '',
+			notificationoptions => $y->{notificationoptions},
+			checkperiod => $y->{checkperiod},
+			notificationinterval => $y->{notificationinterval},
+			notificationperiod => $y->{notificationperiod},
+			maxcheckattempts => $y->{maxcheckattempts},
+			contactgroups => $y->{contactgroups},
+			}
+			);
 	}
 	foreach my $x (@$metrics)
 	{
-        	push(@{$arrays->{$mode}},{name => $id."-".$mode."-".$x->{'name'},cmd => "",period => ""});
+        	push(@{$arrays->{$mode}},
+			{
+			name => $id."-".$mode."-".$x->{'name'},
+			cmd => "",
+                        period => '',
+                        notificationoptions => $x->{notificationoptions},
+                        checkperiod => $x->{checkperiod},
+                        notificationinterval => $x->{notificationinterval},
+                        notificationperiod => $x->{notificationperiod},
+                        maxcheckattempts => $x->{maxcheckattempts},
+                        contactgroups => $x->{contactgroups},			
+			}
+			);
 	}
         foreach my $z (@$external)
         {
-                push(@{$arrays->{$mode}},{name => $id."-".$mode."-".$z->{name},cmd => $z->{cmd},period => $z->{period}} );
+                push(@{$arrays->{$mode}},
+			{
+			name => $id."-".$mode."-".$z->{name},
+			cmd => $z->{cmd},
+			period => $z->{period},
+			retryperiod => $z->{retryperiod},
+                        notificationoptions => $z->{notificationoptions},
+                        checkperiod => $z->{checkperiod},
+                        notificationinterval => $z->{notificationinterval},
+                        notificationperiod => $z->{notificationperiod},
+                        maxcheckattempts => $z->{maxcheckattempts},
+                        contactgroups => $z->{contactgroups},
+			} 
+			);
         }
 
 }
@@ -654,10 +707,20 @@ foreach my $mode (@modes)
                 foreach my $i (@{$jsonchecks->{$mode}})
                 {
 			 $checker=1;
-			 if($self->{nagios}->{services}->{$mode}->{$i->{name}}  and $self->{nagios}->{services}->{$mode}->{$i->{name}}->{cmd} eq $i->{cmd} and $self->{nagios}->{services}->{$mode}->{$i->{name}}->{period} eq $i->{period})
-                         {
+			if(
+				$self->{nagios}->{services}->{$mode}->{$i->{name}}  
+				and $self->{nagios}->{services}->{$mode}->{$i->{name}}->{cmd} eq $i->{cmd} 
+				and $self->{nagios}->{services}->{$mode}->{$i->{name}}->{period} eq $i->{period}
+                                and $self->{nagios}->{services}->{$mode}->{$i->{name}}->{notificationoptions} eq $i->{notificationoptions}
+                                and $self->{nagios}->{services}->{$mode}->{$i->{name}}->{checkperiod} eq $i->{checkperiod}
+                                and $self->{nagios}->{services}->{$mode}->{$i->{name}}->{notificationinterval} eq $i->{notificationinterval}
+                                and $self->{nagios}->{services}->{$mode}->{$i->{name}}->{notificationperiod} eq $i->{notificationperiod}
+                                and $self->{nagios}->{services}->{$mode}->{$i->{name}}->{maxcheckattempts} eq $i->{maxcheckattempts}
+                                and $self->{nagios}->{services}->{$mode}->{$i->{name}}->{contactgroups} eq $i->{contactgroups}
+			)
+                        {
                                  $checker=0;
-                         }
+                        }
 
 			if($checker eq 1)
 			{
@@ -695,8 +758,19 @@ foreach my $mode (@modes)
                         $checker=1;
                         foreach my $x (@{$jsonchecks->{$mode}})
                         {
-                                if($x->{name} eq $i  and $x->{cmd} eq $self->{nagios}->{services}->{$mode}->{$i}->{cmd} and  $x->{period} eq $self->{nagios}->{services}->{$mode}->{$i}->{period})
-                                {
+
+				if(
+                                	$x->{name} eq $i
+					and $self->{nagios}->{services}->{$mode}->{$i}->{cmd} eq $x->{cmd}
+                                	and $self->{nagios}->{services}->{$mode}->{$i}->{period} eq $x->{period}
+                                	and $self->{nagios}->{services}->{$mode}->{$i}->{notificationoptions} eq $x->{notificationoptions}
+                                	and $self->{nagios}->{services}->{$mode}->{$i}->{checkperiod} eq $x->{checkperiod}
+                                	and $self->{nagios}->{services}->{$mode}->{$i}->{notificationinterval} eq $x->{notificationinterval}
+                                	and $self->{nagios}->{services}->{$mode}->{$i}->{notificationperiod} eq $x->{notificationperiod}
+                                	and $self->{nagios}->{services}->{$mode}->{$i}->{maxcheckattempts} eq $x->{maxcheckattempts}
+                                	and $self->{nagios}->{services}->{$mode}->{$i}->{contactgroups} eq $x->{contactgroups}
+                        	)
+				{
                                         $checker=0;
                                         last;
                                 }

@@ -3,6 +3,7 @@ package cloudviewer::vmchecks;
 use strict;
 use warnings;
 use Time::Piece;
+use Data::Dumper;
 
 sub GuestDisks
 {
@@ -12,9 +13,11 @@ my $prefix=shift;
 my $header=shift;
 my @message=@{$header};
 my $status=0;
+my $isexception=0;
+
 my @dependencies=("guest.disk");
 
-if(cloudviewer::helper::checkdependency(\@dependencies,$checkdata->{properties}) eq 0)
+if(cloudviewer::helper::checkdependency(\@dependencies,$checkdata->{properties},$object) eq 0)
 {
 	my $Disks=$object->{configuration}->get_property("guest.disk");
 	my $stdvalues=$checkdata->{stdvalues};
@@ -25,18 +28,33 @@ if(cloudviewer::helper::checkdependency(\@dependencies,$checkdata->{properties})
 	{
 		$filledspace=(($Disk->capacity - $Disk->freeSpace)/$Disk->capacity)*100;
 		$diskname=$Disk->diskPath;
+		$isexception=0;
+		if($stdvalues->{'exception'})
+		{
+			for my $exception(@{$stdvalues->{'exception'}})
+			{
+				if($diskname eq $exception)
+				{
+					$isexception=1;
+				}
+			}
+		}
 		if(!$stdvalues->{'critical'} and !$stdvalues->{'warn'})
 		{
 					push(@message,"OK:      Diskspace is green but no values defined. Filled space for $diskname : ".$filledspace);
 		}
+		elsif($isexception eq 1)
+		{
+					push(@message,"OK:      Disk is on Exception List. Filled space for $diskname : ".$filledspace);
+		}
 		else
 		{
 
-				if($filledspace lt $stdvalues->{'warn'})
+				if($filledspace < $stdvalues->{'warn'})
 				{
 					push(@message,"OK:      Diskspace is green. Filled space for $diskname : ".$filledspace);
 				}
-				elsif($filledspace gt $stdvalues->{'warn'} and $filledspace  lt $stdvalues->{'critical'})
+				elsif($filledspace >= $stdvalues->{'warn'} and $filledspace  <  $stdvalues->{'critical'})
 				{
 					$status=1;
 					push(@message,"Warn:      Diskspace is yellow. Filled space for $diskname : ".$filledspace);
@@ -68,7 +86,7 @@ my @message=@{$header};
 my $status=0;
 my @dependencies=("summary.runtime.connectionState");
 
-if(cloudviewer::helper::checkdependency(\@dependencies,$checkdata->{properties}) eq 0)
+if(cloudviewer::helper::checkdependency(\@dependencies,$checkdata->{properties},$object) eq 0)
 {
 	my $constate=$object->{configuration}->{"summary.runtime.connectionState"};
 	if($constate->val  ne "connected")
@@ -100,7 +118,7 @@ my @message=@{$header};
 my $status=0;
 my @dependencies=("summary.runtime.toolsInstallerMounted");
 
-if(cloudviewer::helper::checkdependency(\@dependencies,$checkdata->{properties}) eq 0)
+if(cloudviewer::helper::checkdependency(\@dependencies,$checkdata->{properties},$object) eq 0)
 {
 	my $installermount=$object->{configuration}->{"summary.runtime.toolsInstallerMounted"};
 	if($installermount  ne "false")
@@ -130,11 +148,12 @@ my $prefix=shift;
 my $header=shift;
 my @message=@{$header};
 my $status=0;
-my @dependencies=("snapshot.rootSnapshotList");
+my @dependencies=("snapshot");
 
-if(cloudviewer::helper::checkdependency(\@dependencies,$checkdata->{properties}) eq 0)
+if(cloudviewer::helper::checkdependency(\@dependencies,$checkdata->{properties},$object) eq 0)
 {
-	my $snapshots=$object->{configuration}->{"snapshot.rootSnapshotList"};
+	my $tempsnapshot=$object->{configuration}->{"snapshot"};
+	my $snapshots=$tempsnapshot->rootSnapshotList;
 	my $stdvalues=$checkdata->{stdvalues};
 	my @temparray;
 	my @returnlist;
@@ -150,11 +169,11 @@ if(cloudviewer::helper::checkdependency(\@dependencies,$checkdata->{properties})
 			}
 			else
 			{
-				if($snapshot->{days} lt $stdvalues->{'warn'})
+				if($snapshot->{days} < $stdvalues->{'warn'})
 				{
 					push(@message,"OK:      Snapshot $snapshot->{name} is ok. Days : ".$snapshot->{days});
 				}
-				elsif($snapshot->{days} gt $stdvalues->{'warn'} and $snapshot->{days}  lt $stdvalues->{'critical'})
+				elsif($snapshot->{days} >= $stdvalues->{'warn'} and $snapshot->{days}  < $stdvalues->{'critical'})
 				{
 					$status=1;
 					push(@message,"Warn:      Snapshot $snapshot->{name} is in state warning. Days : ".$snapshot->{days});
@@ -174,8 +193,8 @@ if(cloudviewer::helper::checkdependency(\@dependencies,$checkdata->{properties})
 }
 else
 {
-	$status=2;
-	push(@message,"Error:	Configuration Items  is not defined.");
+	$status=0;
+	push(@message,"OK:	There are no Snapshots.");
 }
 return {'name' => $object->{name},'message' => \@message, 'status' => $status, 'service' => $$prefix.$checkdata->{name}, performance => $status};
 }
@@ -222,7 +241,7 @@ my @message=@{$header};
 my $status=0;
 my @dependencies=("configIssue");
 
-if(cloudviewer::helper::checkdependency(\@dependencies,$checkdata->{properties}) eq 0)
+if(cloudviewer::helper::checkdependency(\@dependencies,$checkdata->{properties},$object) eq 0)
 {
 	my $Issues=$object->{configuration}->{"configIssue"};
 	if($Issues)
@@ -258,7 +277,7 @@ my @message=@{$header};
 my $status=0;
 my @dependencies=("triggeredAlarmState");
 
-if(cloudviewer::helper::checkdependency(\@dependencies,$checkdata->{properties}) eq 0)
+if(cloudviewer::helper::checkdependency(\@dependencies,$checkdata->{properties},$object) eq 0)
 {
 	my $Alarms=$object->{configuration}->{"triggeredAlarmState"};
 	if($Alarms)
@@ -294,7 +313,7 @@ my @message=@{$header};
 my $status=0;
 my @dependencies=("overallStatus");
 
-if(cloudviewer::helper::checkdependency(\@dependencies,$checkdata->{properties}) eq 0)
+if(cloudviewer::helper::checkdependency(\@dependencies,$checkdata->{properties},$object) eq 0)
 {
 	my $ostatus=$object->{configuration}->{"overallStatus"};
 	if($ostatus->val eq "red")

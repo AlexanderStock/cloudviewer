@@ -38,7 +38,7 @@ else
 ## Build Hash for each entry
 for my $line (@mainlines)
 {
-	chomp(@temparray=split(/,/,$line));
+	chomp(@temparray=split(/\|/,$line));
 	$maingiveback{$temparray[0]}={ip => $temparray[1],parent => $temparray[2]};
 }
 ## Get Lines from deltafile
@@ -78,10 +78,18 @@ else
 ## Build Hash for each entry
 for my $line (@mainlines)
 {
-        chomp(@temparray=split(/,/,$line));
-        $maingiveback{$temparray[0]}={cmd => $temparray[1],period => $temparray[2]};
+        chomp(@temparray=split(/\|/,$line));
+        $maingiveback{$temparray[0]}={
+				cmd => $temparray[1],
+				period => $temparray[2],
+                                notificationoptions => $temparray[3],
+                                checkperiod => $temparray[4],
+                                notificationinterval => $temparray[5],
+                                notificationperiod => $temparray[6],
+                                maxcheckattempts => $temparray[7],
+                                contactgroups => $temparray[8]
+				};
 }
-
 return {main => \%maingiveback};
 }
 ###################################################################
@@ -148,7 +156,7 @@ for my $mode (keys %$objects)
 		{
                 	$command="check_ok";
 		}
-		$config=$config.$name.",".$ip.",".$parent."\n";
+		$config=$config.$name."|".$ip."|".$parent."\n";
 		$temp=$template;
 		$temp=~s/<name>/$name/g;
 		$temp=~s/<address>/$ip/g;
@@ -283,14 +291,12 @@ service_description     <desc>
 check_command		check_passiv
 passive_checks_enabled  1
 active_checks_enabled   0
-notification_options    w,c,r
-check_period            24x7
-notification_interval   30
-notification_period     24x7
-max_check_attempts	4
-check_interval		5
-retry_interval		5
-contact_groups          admins
+notification_options    <notificationoptions>
+check_period            <checkperiod>
+notification_interval   <notificationinterval>
+notification_period     <notificationperiod>
+max_check_attempts      <maxcheckattempts>
+contact_groups          <contactgroups>
 }";
 
 
@@ -301,14 +307,13 @@ service_description     <desc>
 check_command		<command>
 passive_checks_enabled  1
 active_checks_enabled   1
-notification_options    w,c,r
-check_period            24x7
-notification_interval   30
-notification_period     24x7
-max_check_attempts      4
-check_interval         <period>
-retry_interval          <period>
-contact_groups          admins
+notification_options    <notificationoptions>
+check_period            <checkperiod>
+notification_interval   <notificationinterval>
+notification_period     <notificationperiod>
+max_check_attempts      <maxcheckattempts>
+check_interval          <period>
+contact_groups          <contactgroups>
 }";
 
 if($nagiosdir !~ /^\/((.*?)*\/?)*\/$/)
@@ -328,20 +333,53 @@ for my $mode (keys %$objects)
 		if($i->{cmd})
 		{
 			$temp=$templateactive;
-                        $config=$config.$i->{name}.",".$i->{cmd}.",".$i->{period}."\n";
+                        $config=$config.
+				$i->{name}."|".
+				$i->{cmd}."|".
+				$i->{period}."|".
+				$i->{notificationoptions}."|".
+				$i->{checkperiod}."|".
+				$i->{notificationinterval}."|".
+				$i->{notificationperiod}."|".
+				$i->{maxcheckattempts}."|".
+				$i->{contactgroups}."|".
+				"\n";
                         $temp=~s/<hostgroup>/$hostgroups{$mode}/g;
                         $temp=~s/<desc>/$i->{name}/g;
 			$temp=~s/<command>/$i->{cmd}/g;
 			$temp=~s/<period>/$i->{period}/g;
+                        $temp=~s/<notificationoptions>/$i->{notificationoptions}/g;
+                        $temp=~s/<checkperiod>/$i->{checkperiod}/g;
+                        $temp=~s/<notificationinterval>/$i->{notificationinterval}/g;
+                        $temp=~s/<notificationperiod>/$i->{notificationperiod}/g;
+                        $temp=~s/<maxcheckattempts>/$i->{maxcheckattempts}/g;
+                        $temp=~s/<contactgroups>/$i->{contactgroups}/g;
                         $path=$nagiosdir.$hostgroups{$mode}."/services/service-".$i->{name}.".cfg";
 
 		}
 		else
 		{
                 	$temp=$templatepassiv;
-			$config=$config.$i->{name}.",,".$i->{period}."\n";
-                	$temp=~s/<hostgroup>/$hostgroups{$mode}/g;
+                	$config=$config.
+                                $i->{name}.
+				"|".
+                                "|".
+                                "|".
+                                $i->{notificationoptions}."|".
+                                $i->{checkperiod}."|".
+                                $i->{notificationinterval}."|".
+                                $i->{notificationperiod}."|".
+                                $i->{maxcheckattempts}."|".
+                                $i->{contactgroups}."|".
+                                "\n";
+			$temp=~s/<hostgroup>/$hostgroups{$mode}/g;
                		$temp=~s/<desc>/$i->{name}/g;
+                        $temp=~s/<checkperiod>/$i->{checkperiod}/g;
+                        $temp=~s/<notificationoptions>/$i->{notificationoptions}/g;
+                        $temp=~s/<notificationinterval>/$i->{notificationinterval}/g;
+                        $temp=~s/<notificationperiod>/$i->{notificationperiod}/g;
+                        $temp=~s/<maxcheckattempts>/$i->{maxcheckattempts}/g;
+                        $temp=~s/<contactgroups>/$i->{contactgroups}/g;
 			$path=$nagiosdir.$hostgroups{$mode}."/services/service-".$i->{name}.".cfg";
 		}
                 open(FILE,">","$path") or die "Could not open Path $path .";

@@ -2,6 +2,7 @@ package cloudviewer::hostchecks;
 
 use strict;
 use warnings;
+use Data::Dumper;
 
 sub Issues
 {
@@ -13,7 +14,7 @@ my @message=@{$header};
 my $status=0;
 my @dependencies=("configIssue");
 
-if(cloudviewer::helper::checkdependency(\@dependencies,$checkdata->{properties}) eq 0)
+if(cloudviewer::helper::checkdependency(\@dependencies,$checkdata->{properties},$object) eq 0)
 {
 	my $Issues=$object->{configuration}->get_property("configIssue");
 	my $Maintenance=$object->{configuration}->get_property('runtime.inMaintenanceMode');
@@ -56,7 +57,7 @@ my @message=@{$header};
 my $status=0;
 my @dependencies=("triggeredAlarmState");
 
-if(cloudviewer::helper::checkdependency(\@dependencies,$checkdata->{properties}) eq 0)
+if(cloudviewer::helper::checkdependency(\@dependencies,$checkdata->{properties},$object) eq 0)
 {
 	my $Alarms=$object->{configuration}->{"triggeredAlarmState"};
 	my $Maintenance=$object->{configuration}->get_property('runtime.inMaintenanceMode');
@@ -100,7 +101,7 @@ my @message=@{$header};
 my $status=0;
 my @dependencies=("runtime.connectionState");
 
-if(cloudviewer::helper::checkdependency(\@dependencies,$checkdata->{properties}) eq 0)
+if(cloudviewer::helper::checkdependency(\@dependencies,$checkdata->{properties},$object) eq 0)
 {
 	my $connection=$object->{configuration}->{"runtime.connectionState"};
 	my $Maintenance=$object->{configuration}->get_property('runtime.inMaintenanceMode');
@@ -139,30 +140,88 @@ my $prefix=shift;
 my $header=shift;
 my $status=0;
 my @message= @{$header};
-my @dependencies=("summary.runtime.healthSystemRuntime.systemHealthInfo.numericSensorInfo");
+my @dependencies=("summary.runtime.healthSystemRuntime.systemHealthInfo.numericSensorInfo","summary.runtime.healthSystemRuntime.hardwareStatusInfo");
 
-if(cloudviewer::helper::checkdependency(\@dependencies,$checkdata->{properties}) eq 0)
+if(cloudviewer::helper::checkdependency(\@dependencies,$checkdata->{properties},$object) eq 0)
 {
-	my $hardware=$object->{configuration}->{$checkdata->{properties}[0]};
+	my $sensor=$object->{configuration}->{"summary.runtime.healthSystemRuntime.systemHealthInfo.numericSensorInfo"};
+	my $hardware=$object->{configuration}->{"summary.runtime.healthSystemRuntime.hardwareStatusInfo"};
 	my $Maintenance=$object->{configuration}->get_property('runtime.inMaintenanceMode');
 	my $errorcounter=0;
+	
 	if($Maintenance eq "false")
 	{
-		foreach my $component (@$hardware)
+		foreach my $component (@$sensor)
 		{
-			if($component->healthState->key eq "red")
+			if($component->healthState->key eq "Red")
 			{
 				 push(@message,"ERROR:  Component".$component->name."is critical");
 				 $errorcounter+=1;
 				 $status=2;
 			}
-			elsif($component->healthState->key eq "yellow")
+			elsif($component->healthState->key eq "Yellow")
 			{
 				 push(@message,"WARN:  Component".$component->name."is warning");
 			 	$errorcounter+=1;
 			 	$status=1;
 			}
 		}
+
+                if($hardware->cpuStatusInfo)
+                {
+                	foreach my $component (@{$hardware->cpuStatusInfo})
+                	{
+                        	if($component->status->key eq "Red")
+                        	{
+                                	 push(@message,"ERROR:  Component".$component->name."is critical");
+                                 	$errorcounter+=1;
+                                 	$status=2;
+                        	}
+                        	elsif($component->status->key eq "Yellow")
+                        	{
+                                	 push(@message,"WARN:  Component".$component->name."is warning");
+                                	$errorcounter+=1;
+                                	$status=1;
+                        	}
+                	}
+		}
+		if($hardware->memoryStatusInfo)
+		{
+                	foreach my $component (@{$hardware->memoryStatusInfo})
+                	{
+                       	if($component->status->key eq "Red")
+                        	{
+                                	 push(@message,"ERROR:  Component".$component->name."is critical");
+                                 	$errorcounter+=1;
+                                	 $status=2;
+                        	}
+                        	elsif($component->status->key eq "Yellow")
+                        	{
+                               	  	push(@message,"WARN:  Component".$component->name."is warning");
+                               		 $errorcounter+=1;
+                                	$status=1;
+                        	}
+                	}
+		}
+                if($hardware->storageStatusInfo)
+                {
+                	foreach my $component (@{$hardware->storageStatusInfo})
+                	{
+                        	if($component->status->key eq "Red")
+                        	{
+                               		 push(@message,"ERROR:  Component".$component->name."is critical");
+                                 	$errorcounter+=1;
+                                 	$status=2;
+                        	}
+                        	elsif($component->status->key eq "Yellow")
+                        	{
+                                	 push(@message,"WARN:  Component".$component->name."is warning");
+                                	$errorcounter+=1;
+                                	$status=1;
+                        	}
+                	}
+		}
+
 		if($errorcounter eq 0)
 		{
 			push(@message,"OK:  All components working normal");
@@ -195,7 +254,7 @@ my $status=0;
 my $overallstatus=0;
 my @dependencies=("config.service.service");
 
-if(cloudviewer::helper::checkdependency(\@dependencies,$checkdata->{properties}) eq 0)
+if(cloudviewer::helper::checkdependency(\@dependencies,$checkdata->{properties},$object) eq 0)
 {
 	my $services=$object->{configuration}->{$checkdata->{properties}[0]};
 	my $Maintenance=$object->{configuration}->get_property('runtime.inMaintenanceMode');
@@ -263,7 +322,7 @@ my $status=0;
 my @dependencies=("config.network.vswitch","config.network.vnic","config.network.proxySwitch","config.network.pnic");
 my @dependencies_std=("switchmtu");
 
-if(cloudviewer::helper::checkdependency(\@dependencies,$checkdata->{properties}) eq 0 and cloudviewer::helper::checkdependencystd(\@dependencies_std,$checkdata->{stdvalues}) eq 0)
+if(cloudviewer::helper::checkdependency(\@dependencies,$checkdata->{properties},$object) eq 0 and cloudviewer::helper::checkdependencystd(\@dependencies_std,$checkdata->{stdvalues}) eq 0)
 {
 	my $vswitches=$object->{configuration}->{"config.network.vswitch"};
 	my $vnic=$object->{configuration}->{"config.network.vnic"};
@@ -349,7 +408,7 @@ my @message=@{$header};
 my $status=0;
 my @dependencies=("overallStatus");
 
-if(cloudviewer::helper::checkdependency(\@dependencies,$checkdata->{properties}) eq 0)
+if(cloudviewer::helper::checkdependency(\@dependencies,$checkdata->{properties},$object) eq 0)
 {
 	my $ostatus=$object->{configuration}->{$checkdata->{properties}[0]};
 	my $Maintenance=$object->{configuration}->get_property('runtime.inMaintenanceMode');
@@ -398,7 +457,7 @@ my $status=0;
 my @message= @{$header};
 my @dependencies=("summary.runtime.healthSystemRuntime.systemHealthInfo.numericSensorInfo");
 
-if(cloudviewer::helper::checkdependency(\@dependencies,$checkdata->{properties}) eq 0)
+if(cloudviewer::helper::checkdependency(\@dependencies,$checkdata->{properties},$object) eq 0)
 {
 	my $components=$object->{configuration}->{$checkdata->{properties}[0]};
 	my $Maintenance=$object->{configuration}->get_property('runtime.inMaintenanceMode');
