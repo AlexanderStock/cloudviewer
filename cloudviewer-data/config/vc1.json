@@ -7,7 +7,7 @@
 		"sessiondir":"/var/lib/cloudviewer-data/sessions",
 		"domainsocket":"/omd/sites/cloudviewer/tmp/run/nagios.cmd",
 		"automationdir":"/var/lib/cloudviewer-data/cloudviewer-automated/",
-		"vcenterID":"VMVC02"
+		"vcenterID":"vcenter"
 		},
 	"cluster":{
 		"enabled":"1",
